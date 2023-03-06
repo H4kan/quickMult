@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "qm.console", "qm.Console\qm.console.csproj", "{016D21DE-10DE-425E-A1C1-E4CFAF2771F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "qm.console", "qm.Console\qm.console.csproj", "{016D21DE-10DE-425E-A1C1-E4CFAF2771F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "qm.generator", "qm.generator\qm.generator.csproj", "{69D67215-1CA7-4289-9DDD-570EB48C9717}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "qm.generator", "qm.generator\qm.generator.csproj", "{69D67215-1CA7-4289-9DDD-570EB48C9717}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "qm.naive", "qm.naive\qm.naive.csproj", "{416D2074-36D5-4716-9653-C0D03039F169}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "qm.naive", "qm.naive\qm.naive.csproj", "{416D2074-36D5-4716-9653-C0D03039F169}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "qm.algorithm", "qm.algorithm\qm.algorithm.csproj", "{01C62CE3-46A7-4BB2-9ADD-7E7351340412}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "qm.algorithm", "qm.algorithm\qm.algorithm.csproj", "{01C62CE3-46A7-4BB2-9ADD-7E7351340412}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "qm.reader", "qm.reader\qm.reader.csproj", "{FB1177EB-7B1B-437E-BC29-CAD8875A6C05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "qm.utils", "qm.reader\qm.utils.csproj", "{FB1177EB-7B1B-437E-BC29-CAD8875A6C05}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "qm.test", "qm.test\qm.test.csproj", "{464F5E6D-06FA-4E48-9B39-7D3E55B2F5CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "qm.test", "qm.test\qm.test.csproj", "{464F5E6D-06FA-4E48-9B39-7D3E55B2F5CA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
