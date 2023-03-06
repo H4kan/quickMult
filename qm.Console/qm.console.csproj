@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\qm.algorithm\qm.algorithm.csproj" />
     <ProjectReference Include="..\qm.naive\qm.naive.csproj" />
   </ItemGroup>
 

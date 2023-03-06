@@ -3,7 +3,7 @@
     public class QmReader
     {
         
-        public bool[][] LoadFromFile(string filename)
+        public byte[][] LoadFromFile(string filename)
         {
             throw new NotImplementedException();
         }
