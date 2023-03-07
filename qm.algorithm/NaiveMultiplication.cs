@@ -13,7 +13,7 @@ namespace qm.algorithm
                 {
                     for (int k = 0; k < input.Length; k++)
                     {
-                        resultHandlingMatrix[i][j] += (byte)(input[i][k] & input[k][j]);
+                        resultHandlingMatrix[i][j] |= (byte)(input[i][k] & input[k][j]);
                     }
                 }
             }
