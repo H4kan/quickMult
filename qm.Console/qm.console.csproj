@@ -10,6 +10,8 @@
   <ItemGroup>
     <ProjectReference Include="..\qm.algorithm\qm.algorithm.csproj" />
     <ProjectReference Include="..\qm.naive\qm.naive.csproj" />
+    <ProjectReference Include="..\qm.generator\qm.generator.csproj" />
+    <ProjectReference Include="..\qm.utils\qm.utils.csproj" />
   </ItemGroup>
 
 </Project>

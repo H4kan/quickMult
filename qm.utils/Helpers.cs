@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace qm.utils
 {
@@ -10,12 +6,9 @@ namespace qm.utils
     {
         public static byte[][] InitializeMatrix(int size)
         {
-            var matrix = new byte[size][];
-            for (int i = 0; i < matrix.Length; i++)
-            {
-                matrix[i] = new byte[size];
-            }
-            return matrix;
+            return Enumerable.Range(0, size)
+                .Select(i => new byte[size])
+                .ToArray();
         }
 
         public static void CopyMatrix(byte[][] target, byte[][] source)
@@ -45,6 +38,13 @@ namespace qm.utils
             sb.Append(result.Last());
             sb.Append("]");
             return sb.ToString();
+        }
+
+        public static string GetPathForFile(string fileName)
+        {
+            var x = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
+            Console.Write(x);
+            return x;
         }
     }
 }

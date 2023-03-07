@@ -1,6 +1,4 @@
-﻿using qm.utils;
-
-namespace qm.algorithm
+﻿namespace qm.algorithm
 {
     public class QmAlgorithm
     {
@@ -59,6 +57,6 @@ namespace qm.algorithm
 
         }
 
-        
+
     }
 }

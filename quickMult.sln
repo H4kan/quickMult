@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "qm.naive", "qm.naive\qm.nai
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "qm.algorithm", "qm.algorithm\qm.algorithm.csproj", "{01C62CE3-46A7-4BB2-9ADD-7E7351340412}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "qm.utils", "qm.reader\qm.utils.csproj", "{FB1177EB-7B1B-437E-BC29-CAD8875A6C05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "qm.utils", "qm.utils\qm.utils.csproj", "{FB1177EB-7B1B-437E-BC29-CAD8875A6C05}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "qm.test", "qm.test\qm.test.csproj", "{464F5E6D-06FA-4E48-9B39-7D3E55B2F5CA}"
 EndProject
