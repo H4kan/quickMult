@@ -28,23 +28,27 @@ namespace qm.utils
             {
                 return "Result []";
             }
-            StringBuilder sb = new StringBuilder();
-            sb.Append("Result: [");
+
+            StringBuilder sb = new("Result: [");
             for (int i = 0; i < result.Count - 1; i++)
             {
                 sb.Append(result[i]);
-                sb.Append(" ");
+                sb.Append(' ');
             }
             sb.Append(result.Last());
-            sb.Append("]");
+            sb.Append(']');
+
             return sb.ToString();
         }
 
         public static string GetPathForFile(string fileName)
         {
-            var x = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
-            Console.Write(x);
-            return x;
+            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
+        }
+
+        public static string GetResultFileName(string problemFileName)
+        {
+            return $"{Path.GetFileNameWithoutExtension(problemFileName)}-result.txt";
         }
     }
 }

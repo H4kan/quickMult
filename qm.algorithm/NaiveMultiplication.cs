@@ -7,7 +7,6 @@ namespace qm.algorithm
         public byte[][] ConductSquareMultiplication(byte[][] input)
         {
             var resultHandlingMatrix = Helpers.InitializeMatrix(input.Length);
-            var a = resultHandlingMatrix[0][0] & resultHandlingMatrix[0][0];
             for (int i = 0; i < input.Length; i++)
             {
                 for (int j = 0; j < input.Length; j++)
@@ -18,7 +17,7 @@ namespace qm.algorithm
                     }
                 }
             }
-
+            
             return resultHandlingMatrix;
         }
     }

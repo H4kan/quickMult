@@ -5,16 +5,12 @@ using qm.reader;
 using qm.utils;
 
 Console.WriteLine("Hello, this is Ping-Pong problem solver!");
-Console.WriteLine("Please select an option:");
-Console.WriteLine("1. Solve ping-pong problem");
-Console.WriteLine("2. Generate test instance");
-Console.WriteLine("3. Exit");
-
+PrintOptionInfo();
 ConsoleKeyInfo option;
 
 do
 {
-    Console.Write("Enter your choice (1, 2 or 3): ");
+    Console.Write("Enter your choice (1-Solve, 2-Generate or 3-Exit): ");
     option = Console.ReadKey();
     Console.WriteLine();
 
@@ -22,12 +18,18 @@ do
     {
         var fileName = GetFileName(true);
         var resultMatrix = QmReader.LoadFromFile(fileName);
+        while (resultMatrix == null)
+        {
+            Console.WriteLine($"The input data from the {fileName} has an invalid structure. Try again with diffrent file.");
+            fileName = GetFileName(false);
+            resultMatrix = QmReader.LoadFromFile(fileName);
+        }
 
         var naiveAlg = new NaiveAlgorithm(resultMatrix.Length, resultMatrix);
         var solution = naiveAlg.ConductAlgorithm();
 
-        var solutionFileName = Path.GetFileNameWithoutExtension(fileName) + "-result.txt";
-        QmWriter.SaveSolutionToFile(solution, fileName);
+        var solutionFileName = Helpers.GetResultFileName(fileName);
+        QmWriter.SaveSolutionToFile(solution, solutionFileName);
 
         Console.WriteLine($"Problem solved, the result is in the file {solutionFileName}");
         Console.WriteLine(Helpers.FormatResult(solution));
@@ -42,6 +44,9 @@ do
 
         Console.WriteLine($"A test instance for {n} players was generated and saved in a file {fileName}");
     }
+
+    Console.WriteLine("\n----------------------------------------------------------------\n");
+    PrintOptionInfo();
 } while (option.KeyChar != '3');
 
 Console.WriteLine("Bye!");
@@ -51,12 +56,13 @@ Console.ReadKey();
 
 static string GetFileName(bool fileShouldExist = false)
 {
+
     Console.Write("Enter the file name: ");
     var fileName = Console.ReadLine();
 
     while (string.IsNullOrEmpty(fileName)
         || fileName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0
-        || (fileShouldExist && !File.Exists(PathUtil.GetPathForFile(fileName))))
+        || (fileShouldExist && !File.Exists(Helpers.GetPathForFile(fileName))))
     {
         Console.WriteLine("Invalid file name. Please enter an valid file name.");
         Console.WriteLine("Enter the file name: ");
@@ -77,4 +83,12 @@ static int GetNumberOfPlayers()
     }
 
     return n;
+}
+
+static void PrintOptionInfo()
+{
+    Console.WriteLine("Please select an option:");
+    Console.WriteLine("1. Solve ping-pong problem");
+    Console.WriteLine("2. Generate test instance");
+    Console.WriteLine("3. Exit");
 }

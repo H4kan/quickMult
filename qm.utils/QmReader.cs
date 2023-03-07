@@ -4,11 +4,11 @@ namespace qm.reader
 {
     public static class QmReader
     {
-        public static byte[][] LoadFromFile(string filename)
+        public static byte[][]? LoadFromFile(string filename)
         {
             var filePath = Helpers.GetPathForFile(filename);
             if (!File.Exists(filePath))
-                throw new FileNotFoundException(filename);
+                return null;
 
             using var reader = new StreamReader(filename);
             try
@@ -21,7 +21,8 @@ namespace qm.reader
                     var parts = reader.ReadLine()!.Split(' ');
                     for (int j = 0; j < parts.Length; j++)
                     {
-                        matrix[i][j] = byte.Parse(parts[j]);
+                        if (!byte.TryParse(parts[j], out matrix[i][j]))
+                            return null;
                     }
                 }
 
@@ -29,7 +30,7 @@ namespace qm.reader
             }
             catch (Exception)
             {
-                throw new FormatException($"The input data from the {filename} has an invalid structure.");
+                return null;
             }
         }
     }
