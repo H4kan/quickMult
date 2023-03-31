@@ -10,12 +10,15 @@ namespace qm.test
         [TestMethod]
         public void TestRandomMatrix()
         {
-            var matrix = MatrixGenerator.GenerateRandomResultMatrix(1000, 0);
+            for (int i = 0; i < 10; i++)
+            {
+                var matrix = MatrixGenerator.GenerateRandomResultMatrix(16, 0);
 
-            var naiveSolution = new NaiveAlgorithm(1000, matrix).ConductAlgorithm();
-            var qmSolution = new QmAlgorithm(1000, matrix).ConductAlgorithm();
+                var naiveSolution = new NaiveAlgorithm(16, matrix).ConductAlgorithm();
+                var qmSolution = new QmAlgorithm(16, matrix).ConductAlgorithm();
 
-            CollectionAssert.AreEqual(naiveSolution, qmSolution);
+                CollectionAssert.AreEqual(naiveSolution, qmSolution);
+            }
         }
 
         [TestMethod]

@@ -17,7 +17,7 @@ namespace qm.naive
 
         public List<int> ConductAlgorithm()
         {
-            var resultHandlingMatrix = Helpers.InitializeMatrix(this.playerNum);
+            var resultHandlingMatrix = Helpers.InitializeMatrix<byte>(this.playerNum);
             Helpers.CopyMatrix(resultHandlingMatrix, this.edges);
 
             // iterate for each player

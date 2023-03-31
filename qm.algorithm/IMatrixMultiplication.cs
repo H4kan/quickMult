@@ -1,7 +1,9 @@
-﻿namespace qm.algorithm
+﻿using System.Numerics;
+
+namespace qm.algorithm
 {
-    public interface IMatrixMultiplication
+    public interface IMatrixMultiplication<T> where T : IBitwiseOperators<T, T, T>
     {
-        public byte[][] ConductSquareMultiplication(byte[][] input);
+        public T[][] ConductSquareMultiplication(T[][] input);
     }
 }

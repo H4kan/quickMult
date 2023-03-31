@@ -4,14 +4,14 @@ namespace qm.utils
 {
     public static class Helpers
     {
-        public static byte[][] InitializeMatrix(int size)
+        public static T[][] InitializeMatrix<T>(int size)
         {
             return Enumerable.Range(0, size)
-                .Select(i => new byte[size])
+                .Select(i => new T[size])
                 .ToArray();
         }
 
-        public static void CopyMatrix(byte[][] target, byte[][] source)
+        public static void CopyMatrix<T>(T[][] target, T[][] source)
         {
             for (int i = 0; i < Math.Min(source.Length, target.Length); i++)
             {

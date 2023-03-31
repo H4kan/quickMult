@@ -2,35 +2,36 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace qm.algorithm
 {
-    public class StrassenMultiplication : IMatrixMultiplication
+    public class StrassenMultiplication<T> : IMatrixMultiplication<T> where T : IBitwiseOperators<T, T, T>
     {
-        private NaiveMultiplication naiveMultiplication = new NaiveMultiplication();
+        private NaiveMultiplication<T> naiveMultiplication = new NaiveMultiplication<T>();
 
-        public int SwitchToNaiveStep = 512;
+        public int SwitchToNaiveStep = 4;
 
-        public byte[][] ConductSquareMultiplication(byte[][] input)
+        public T[][] ConductSquareMultiplication(T[][] input)
         {
             // upsize to 2^n
-            var operationalMatrix = Helpers.InitializeMatrix(Helpers.CeilPower2(input.Length));
-            Helpers.CopyMatrix(operationalMatrix, input);
+            var operationalMatrix = Helpers.InitializeMatrix<T>(Helpers.CeilPower2(input.Length));
+            Helpers.CopyMatrix<T>(operationalMatrix, input);
 
             // do actual multiplication
-            StrassenRecursive(operationalMatrix, operationalMatrix);
+            operationalMatrix = StrassenRecursive(operationalMatrix, operationalMatrix);
             
             // downsize
-            var resultHandlingMatrix = Helpers.InitializeMatrix(input.Length);
-            Helpers.CopyMatrix(resultHandlingMatrix, operationalMatrix);
+            var resultHandlingMatrix = Helpers.InitializeMatrix<T>(input.Length);
+            Helpers.CopyMatrix<T>(resultHandlingMatrix, operationalMatrix);
 
             return resultHandlingMatrix;
         }
 
         // result always in matrixA
-        private byte[][] StrassenRecursive(byte[][] matrixA, byte[][] matrixB)
+        private T[][] StrassenRecursive(T[][] matrixA, T[][] matrixB)
         {
             if (matrixA.Length <= this.SwitchToNaiveStep)
             {
@@ -71,10 +72,10 @@ namespace qm.algorithm
             return matrixA;
         }
 
-        private byte[][] GetSubMatrixByIndex(byte[][] matrixA, bool firstX, bool firstY)
+        private T[][] GetSubMatrixByIndex(T[][] matrixA, bool firstX, bool firstY)
         {
             var halfSize = matrixA.Length / 2;
-            var result = Helpers.InitializeMatrix(halfSize);
+            var result = Helpers.InitializeMatrix<T>(halfSize);
             
             int startX = firstX ? 0 : halfSize;
             int startY = firstY ? 0 : halfSize;
@@ -90,39 +91,27 @@ namespace qm.algorithm
             return result;
         }
 
-        private byte[][] AddMatrices(byte[][] matrixA, byte[][] matrixB)
+        private T[][] AddMatrices(T[][] matrixA, T[][] matrixB)
         {
-            var result = Helpers.InitializeMatrix(matrixA.Length);
+            var result = Helpers.InitializeMatrix<T>(matrixA.Length);
             Helpers.CopyMatrix(result, matrixA);
 
-            for (int i = 0; i < matrixA.Length; i++)
-            {
-                for (int j = 0; j < matrixA.Length; j++)
-                {
-                    result[i][j] |= matrixB[i][j];
-                }
-            }
+            AddMatricesInPlace(result, matrixB);
 
             return result;
         }
 
-        private byte[][] SubMatrices(byte[][] matrixA, byte[][] matrixB)
+        private T[][] SubMatrices(T[][] matrixA, T[][] matrixB)
         {
-            var result = Helpers.InitializeMatrix(matrixA.Length);
+            var result = Helpers.InitializeMatrix<T>(matrixA.Length);
             Helpers.CopyMatrix(result, matrixA);
 
-            for (int i = 0; i < matrixA.Length; i++)
-            {
-                for (int j = 0; j < matrixA.Length; j++)
-                {
-                    result[i][j] -= matrixB[i][j];
-                }
-            }
+            SubMatricesInPlace(result, matrixB);
 
             return result;
         }
 
-        private byte[][] AddMatricesInPlace(byte[][] matrixA, byte[][] matrixB)
+        private T[][] AddMatricesInPlace(T[][] matrixA, T[][] matrixB)
         {
             for (int i = 0; i < matrixA.Length; i++)
             {
@@ -134,20 +123,20 @@ namespace qm.algorithm
             return matrixA;
         }
 
-        private byte[][] SubMatricesInPlace(byte[][] matrixA, byte[][] matrixB)
+        private T[][] SubMatricesInPlace(T[][] matrixA, T[][] matrixB)
         {
             for (int i = 0; i < matrixA.Length; i++)
             {
                 for (int j = 0; j < matrixA.Length; j++)
                 {
-                    matrixA[i][j] -= matrixB[i][j];
+                    matrixA[i][j] ^= matrixB[i][j];
                 }
             }
 
             return matrixA;
         }
 
-        private void MergeIntoTarget(byte[][] target, byte[][] A11, byte[][] A12, byte[][] A21, byte[][] A22)
+        private void MergeIntoTarget(T[][] target, T[][] A11, T[][] A12, T[][] A21, T[][] A22)
         {
             var offset = target.Length / 2;
             for (int i = 0; i < offset; i++)

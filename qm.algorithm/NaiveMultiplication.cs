@@ -1,19 +1,20 @@
 ﻿using qm.utils;
+using System.Numerics;
 
 namespace qm.algorithm
 {
-    public class NaiveMultiplication : IMatrixMultiplication
+    public class NaiveMultiplication<T> : IMatrixMultiplication<T> where T: IBitwiseOperators<T, T, T>
     {
-        public byte[][] ConductSquareMultiplication(byte[][] input)
+        public T[][] ConductSquareMultiplication(T[][] input)
         {
-            var resultHandlingMatrix = Helpers.InitializeMatrix(input.Length);
+            var resultHandlingMatrix = Helpers.InitializeMatrix<T>(input.Length);
             for (int i = 0; i < input.Length; i++)
             {
                 for (int j = 0; j < input.Length; j++)
                 {
                     for (int k = 0; k < input.Length; k++)
                     {
-                        resultHandlingMatrix[i][j] |= (byte)(input[i][k] & input[k][j]);
+                        resultHandlingMatrix[i][j] |= (T)(input[i][k] & input[k][j]);
                     }
                 }
             }
@@ -21,16 +22,16 @@ namespace qm.algorithm
             return resultHandlingMatrix;
         }
 
-        public byte[][] ConductMultiplication(byte[][] inputA, byte[][] inputB)
+        public T[][] ConductMultiplication(T[][] inputA, T[][] inputB)
         {
-            var resultHandlingMatrix = Helpers.InitializeMatrix(inputA.Length);
+            var resultHandlingMatrix = Helpers.InitializeMatrix<T>(inputA.Length);
             for (int i = 0; i < inputA.Length; i++)
             {
                 for (int j = 0; j < inputA.Length; j++)
                 {
                     for (int k = 0; k < inputB.Length; k++)
                     {
-                        resultHandlingMatrix[i][j] |= (byte)(inputA[i][k] & inputB[k][j]);
+                        resultHandlingMatrix[i][j] |= (T)(inputA[i][k] & inputB[k][j]);
                     }
                 }
             }

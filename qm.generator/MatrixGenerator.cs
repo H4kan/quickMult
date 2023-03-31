@@ -7,7 +7,7 @@ namespace qm.generator
         public static byte[][] GenerateRandomResultMatrix(int n, int seed = 0)
         {
             var rand = new Random(seed);
-            var resultMatrix = Helpers.InitializeMatrix(n);
+            var resultMatrix = Helpers.InitializeMatrix<byte>(n);
 
             for (int i = 0; i < n - 1; i++)
             {
@@ -25,7 +25,7 @@ namespace qm.generator
         public static byte[][] GenerateLoserResultMatrix(int n, int seed = 0, float loserPerc = 80)
         {
             var rand = new Random(seed);
-            var resultMatrix = Helpers.InitializeMatrix(n);
+            var resultMatrix = Helpers.InitializeMatrix<byte>(n);
 
             for (int i = 0; i < n - 1; i++)
             {

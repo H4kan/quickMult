@@ -15,7 +15,7 @@
         public List<int> ConductAlgorithm()
         {
 
-            IMatrixMultiplication matrixMultiplication = new StrassenMultiplication();
+            IMatrixMultiplication<byte> matrixMultiplication = new StrassenMultiplication<byte>();
 
             var resultHandlingMatrix = matrixMultiplication.ConductSquareMultiplication(this.edges);
 
