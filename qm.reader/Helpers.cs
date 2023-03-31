@@ -20,9 +20,9 @@ namespace qm.utils
 
         public static void CopyMatrix(byte[][] target, byte[][] source)
         {
-            for (int i = 0; i < source.Length; i++)
+            for (int i = 0; i < Math.Min(source.Length, target.Length); i++)
             {
-                for (int j = 0; j < source[i].Length; j++)
+                for (int j = 0; j < Math.Min(source[i].Length, target[i].Length); j++)
                 {
                     target[i][j] = source[i][j];
                 }
@@ -45,6 +45,18 @@ namespace qm.utils
             sb.Append(result.Last());
             sb.Append("]");
             return sb.ToString();
+        }
+
+        public static int CeilPower2(int num)
+        {
+            num--;
+            num |= num >> 1;
+            num |= num >> 2;
+            num |= num >> 4;
+            num |= num >> 8;
+            num |= num >> 16;
+            num++;
+            return num;
         }
     }
 }
