@@ -73,35 +73,18 @@ namespace qm.algorithm
 
         private byte[][] GetSubMatrixByIndex(byte[][] matrixA, bool firstX, bool firstY)
         {
-            var result = Helpers.InitializeMatrix(matrixA.Length / 2);
-            int startX, startY, endX, endY;
-            if (firstX)
-            {
-                startX = 0;
-                endX = matrixA.Length / 2;
-                
-            }
-            else
-            {
-                startX = matrixA.Length / 2;
-                endX = matrixA.Length;
-            }
-            if (firstY)
-            {
-                startY = 0;
-                endY = matrixA.Length / 2;
-            }
-            else
-            {
-                startY = matrixA.Length / 2;
-                endY = matrixA.Length;
-            }
+            var halfSize = matrixA.Length / 2;
+            var result = Helpers.InitializeMatrix(halfSize);
+            
+            int startX = firstX ? 0 : halfSize;
+            int startY = firstY ? 0 : halfSize;
+          
 
-            for (int i = startX; i < endX; i++)
+            for (int i = 0; i < halfSize; i++)
             {
-                for (int j = startY; j < endY; j++)
+                for (int j = 0; j < halfSize; j++)
                 {
-                    result[i][j] = matrixA[i][j];
+                    result[i][j] = matrixA[startX + i][startY + j];
                 }
             }
             return result;
@@ -132,7 +115,7 @@ namespace qm.algorithm
             {
                 for (int j = 0; j < matrixA.Length; j++)
                 {
-                    result[i][j] |= matrixB[i][j];
+                    result[i][j] -= matrixB[i][j];
                 }
             }
 
