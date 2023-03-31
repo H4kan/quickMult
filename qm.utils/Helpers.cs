@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace qm.utils
 {
@@ -10,12 +6,9 @@ namespace qm.utils
     {
         public static byte[][] InitializeMatrix(int size)
         {
-            var matrix = new byte[size][];
-            for (int i = 0; i < matrix.Length; i++)
-            {
-                matrix[i] = new byte[size];
-            }
-            return matrix;
+            return Enumerable.Range(0, size)
+                .Select(i => new byte[size])
+                .ToArray();
         }
 
         public static void CopyMatrix(byte[][] target, byte[][] source)
@@ -35,16 +28,27 @@ namespace qm.utils
             {
                 return "Result []";
             }
-            StringBuilder sb = new StringBuilder();
-            sb.Append("Result: [");
+
+            StringBuilder sb = new("Result: [");
             for (int i = 0; i < result.Count - 1; i++)
             {
                 sb.Append(result[i]);
-                sb.Append(" ");
+                sb.Append(' ');
             }
             sb.Append(result.Last());
-            sb.Append("]");
+            sb.Append(']');
+
             return sb.ToString();
+        }
+
+        public static string GetPathForFile(string fileName)
+        {
+            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
+        }
+
+        public static string GetResultFileName(string problemFileName)
+        {
+            return $"{Path.GetFileNameWithoutExtension(problemFileName)}-result.txt";
         }
 
         public static int CeilPower2(int num)

@@ -1,5 +1,4 @@
 ﻿using qm.utils;
-using System.Runtime.CompilerServices;
 
 namespace qm.naive
 {
@@ -10,7 +9,8 @@ namespace qm.naive
 
         private readonly int playerNum;
 
-        public NaiveAlgorithm(int playerNum, byte[][] edges) {
+        public NaiveAlgorithm(int playerNum, byte[][] edges)
+        {
             this.edges = edges;
             this.playerNum = playerNum;
         }
@@ -47,7 +47,7 @@ namespace qm.naive
             }
 
             var result = new List<int>();
-            
+
             bool haveXProp;
             for (int i = 0; i < playerNum; i++)
             {
@@ -58,7 +58,7 @@ namespace qm.naive
                     {
                         haveXProp = false;
                         break;
-                    }   
+                    }
                 }
                 if (haveXProp)
                 {
@@ -69,6 +69,5 @@ namespace qm.naive
             return result;
 
         }
-
     }
 }
