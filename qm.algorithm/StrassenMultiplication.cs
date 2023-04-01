@@ -7,7 +7,13 @@ namespace qm.algorithm
     {
         private NaiveMultiplication<T> naiveMultiplication = new NaiveMultiplication<T>();
 
-        public int SwitchToNaiveStep = 2;
+        public int SwitchToNaiveStep;
+
+        // 512 is optimal value, other just for unit testing
+        public StrassenMultiplication(int switchToNaiveStep = 512)
+        {
+            this.SwitchToNaiveStep = switchToNaiveStep;
+        }
 
         public T[][] ConductSquareMultiplication(T[][] input)
         {
