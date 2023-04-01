@@ -62,5 +62,14 @@ namespace qm.utils
             num++;
             return num;
         }
+
+        public static int CeilLog2(int value)
+        {
+            int i;
+            for (i = -1; value != 0; i++)
+                value >>= 1;
+
+            return (i == -1) ? 1 : i + 1;
+        }
     }
 }

@@ -47,9 +47,11 @@ namespace qm.test
             var naiveSolution = new NaiveAlgorithm(matrixSize, matrix).ConductAlgorithm();
             var naiveMultSolution = new QmAlgorithm<int>(matrixSize, matrix, new NaiveMultiplication<int>()).ConductAlgorithm();
             var strassenSolution = new QmAlgorithm<int>(matrixSize, matrix, new StrassenMultiplication<int>(4)).ConductAlgorithm();
+            var hybridSolutioon = new QmAlgorithm<int>(matrixSize, matrix, new HybridMultiplication<int>()).ConductAlgorithm();
 
             CollectionAssert.AreEqual(naiveSolution, naiveMultSolution);
             CollectionAssert.AreEqual(naiveSolution, strassenSolution);
+            CollectionAssert.AreEqual(naiveSolution, hybridSolutioon);
         }
     }
 }
