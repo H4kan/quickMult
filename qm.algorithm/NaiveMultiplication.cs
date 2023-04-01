@@ -15,7 +15,7 @@ namespace qm.algorithm
                 {
                     for (int k = 0; k < input.Length; k++)
                     {
-                        resultHandlingMatrix[i][j] += (input[i][k] & input[k][j]);
+                        resultHandlingMatrix[i][j] += (input[i][k] * input[k][j]);
                     }
                 }
             }
@@ -32,7 +32,7 @@ namespace qm.algorithm
                 {
                     for (int k = 0; k < inputB.Length; k++)
                     {
-                        resultHandlingMatrix[i][j] += (T)(inputA[i][k] * inputB[k][j]);
+                        resultHandlingMatrix[i][j] += (inputA[i][k] * inputB[k][j]);
                     }
                 }
             }
