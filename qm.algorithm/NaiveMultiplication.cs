@@ -32,7 +32,7 @@ namespace qm.algorithm
                 {
                     for (int k = 0; k < inputB.Length; k++)
                     {
-                        resultHandlingMatrix[i][j] += (T)(inputA[i][k] & inputB[k][j]);
+                        resultHandlingMatrix[i][j] += (T)(inputA[i][k] * inputB[k][j]);
                     }
                 }
             }

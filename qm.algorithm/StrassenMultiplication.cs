@@ -1,10 +1,5 @@
-﻿using qm.utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Numerics;
+using qm.utils;
 
 namespace qm.algorithm
 {
@@ -37,15 +32,14 @@ namespace qm.algorithm
                 return this.naiveMultiplication.ConductMultiplication(matrixA, matrixB);
             }
 
-
             var A11 = GetSubMatrixByIndex(matrixA, true, true);
-            var A12 = GetSubMatrixByIndex(matrixA, false, true);
-            var A21 = GetSubMatrixByIndex(matrixA, true, false);
+            var A21 = GetSubMatrixByIndex(matrixA, false, true);
+            var A12 = GetSubMatrixByIndex(matrixA, true, false);
             var A22 = GetSubMatrixByIndex(matrixA, false, false);
 
             var B11 = GetSubMatrixByIndex(matrixB, true, true);
-            var B12 = GetSubMatrixByIndex(matrixB, false, true);
-            var B21 = GetSubMatrixByIndex(matrixB, true, false);
+            var B21 = GetSubMatrixByIndex(matrixB, false, true);
+            var B12 = GetSubMatrixByIndex(matrixB, true, false);
             var B22 = GetSubMatrixByIndex(matrixB, false, false);
 
             var P1 = StrassenRecursive(AddMatrices(A11, A22), AddMatrices(B11, B22));
@@ -143,8 +137,8 @@ namespace qm.algorithm
                 for (int j = 0; j < offset; j++)
                 {
                     target[i][j] = A11[i][j];
-                    target[i + offset][j] = A12[i][j];
-                    target[i][j + offset] = A21[i][j];
+                    target[i + offset][j] = A21[i][j];
+                    target[i][j + offset] = A12[i][j];
                     target[i + offset][j + offset] = A22[i][j];
                 }
             }
