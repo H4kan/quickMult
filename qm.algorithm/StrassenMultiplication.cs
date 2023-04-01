@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace qm.algorithm
 {
-    public class StrassenMultiplication<T> : IMatrixMultiplication<T> where T : IBitwiseOperators<T, T, T>
+    public class StrassenMultiplication<T> : IMatrixMultiplication<T> where T : IBitwiseOperators<T, T, T>, INumber<T>
     {
         private NaiveMultiplication<T> naiveMultiplication = new NaiveMultiplication<T>();
 
-        public int SwitchToNaiveStep = 4;
+        public int SwitchToNaiveStep = 2;
 
         public T[][] ConductSquareMultiplication(T[][] input)
         {
@@ -30,7 +30,6 @@ namespace qm.algorithm
             return resultHandlingMatrix;
         }
 
-        // result always in matrixA
         private T[][] StrassenRecursive(T[][] matrixA, T[][] matrixB)
         {
             if (matrixA.Length <= this.SwitchToNaiveStep)
@@ -51,11 +50,11 @@ namespace qm.algorithm
 
             var P1 = StrassenRecursive(AddMatrices(A11, A22), AddMatrices(B11, B22));
             var P2 = StrassenRecursive(AddMatrices(A21, A22), B11);
-            var P3 = StrassenRecursive(A11, SubMatrices(B12, B22));
-            var P4 = StrassenRecursive(A22, SubMatrices(B21, B11));
-            var P5 = StrassenRecursive(AddMatrices(A11, A22), B22);
+            var P5 = StrassenRecursive(AddMatrices(A11, A12), B22);
             var P6 = StrassenRecursive(SubMatrices(A21, A11), AddMatrices(B11, B12));
             var P7 = StrassenRecursive(SubMatrices(A12, A22), AddMatrices(B21, B22));
+            var P3 = StrassenRecursive(A11, SubMatrices(B12, B22));
+            var P4 = StrassenRecursive(A22, SubMatrices(B21, B11));
 
             // we can save it to A since it is not relevant anymore (memory saving)
             // in place operations used (memory saving)
@@ -66,7 +65,7 @@ namespace qm.algorithm
                  AddMatricesInPlace(P5, P3),
                  // P4 not used anymore
                  AddMatricesInPlace(P4, P2),
-                 SubMatricesInPlace(AddMatricesInPlace(P1, AddMatricesInPlace(P3, P6)), P2)
+                 SubMatricesInPlace(AddMatricesInPlace(AddMatricesInPlace(P3, P6), P1), P2)
                  );
 
             return matrixA;
@@ -117,7 +116,7 @@ namespace qm.algorithm
             {
                 for (int j = 0; j < matrixA.Length; j++)
                 {
-                    matrixA[i][j] |= matrixB[i][j];
+                    matrixA[i][j] += matrixB[i][j];
                 }
             }
             return matrixA;
@@ -129,7 +128,7 @@ namespace qm.algorithm
             {
                 for (int j = 0; j < matrixA.Length; j++)
                 {
-                    matrixA[i][j] ^= matrixB[i][j];
+                    matrixA[i][j] -= matrixB[i][j];
                 }
             }
 

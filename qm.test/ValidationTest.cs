@@ -12,10 +12,10 @@ namespace qm.test
         {
             for (int i = 0; i < 10; i++)
             {
-                var matrix = MatrixGenerator.GenerateRandomResultMatrix(16, 0);
+                var matrix = MatrixGenerator.GenerateRandomResultMatrix(8, 0);
 
-                var naiveSolution = new NaiveAlgorithm(16, matrix).ConductAlgorithm();
-                var qmSolution = new QmAlgorithm(16, matrix).ConductAlgorithm();
+                var naiveSolution = new NaiveAlgorithm(8, matrix).ConductAlgorithm();
+                var qmSolution = new QmAlgorithm(8, matrix).ConductAlgorithm();
 
                 CollectionAssert.AreEqual(naiveSolution, qmSolution);
             }

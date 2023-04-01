@@ -15,9 +15,11 @@
         public List<int> ConductAlgorithm()
         {
 
-            IMatrixMultiplication<byte> matrixMultiplication = new StrassenMultiplication<byte>();
+            IMatrixMultiplication<int> matrixMultiplication = new StrassenMultiplication<int>();
 
-            var resultHandlingMatrix = matrixMultiplication.ConductSquareMultiplication(this.edges);
+            var resultHandlingMatrix = matrixMultiplication.ConductSquareMultiplication(this.edges.Select(l => l.Select(e => (int)e).ToArray()).ToArray());
+
+            var anotherResult = new NaiveMultiplication<byte>().ConductSquareMultiplication(this.edges);
 
             for (int i = 0; i < playerNum; i++)
             {
