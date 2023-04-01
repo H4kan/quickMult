@@ -9,7 +9,7 @@ namespace qm.algorithm
 
         public int SwitchToNaiveStep;
 
-        // 512 is optimal value, other just for unit testing
+        // 512 is optimal value
         public StrassenMultiplication(int switchToNaiveStep = 512)
         {
             this.SwitchToNaiveStep = switchToNaiveStep;
@@ -48,13 +48,14 @@ namespace qm.algorithm
             var B12 = GetSubMatrixByIndex(matrixB, true, false);
             var B22 = GetSubMatrixByIndex(matrixB, false, false);
 
+            // some memory savings
             var P1 = StrassenRecursive(AddMatrices(A11, A22), AddMatrices(B11, B22));
             var P2 = StrassenRecursive(AddMatrices(A21, A22), B11);
             var P5 = StrassenRecursive(AddMatrices(A11, A12), B22);
-            var P6 = StrassenRecursive(SubMatrices(A21, A11), AddMatrices(B11, B12));
-            var P7 = StrassenRecursive(SubMatrices(A12, A22), AddMatrices(B21, B22));
-            var P3 = StrassenRecursive(A11, SubMatrices(B12, B22));
-            var P4 = StrassenRecursive(A22, SubMatrices(B21, B11));
+            var P6 = StrassenRecursive(SubMatricesInPlace(A21, A11), AddMatrices(B11, B12));
+            var P7 = StrassenRecursive(SubMatricesInPlace(A12, A22), AddMatrices(B21, B22));
+            var P3 = StrassenRecursive(A11, SubMatricesInPlace(B12, B22));
+            var P4 = StrassenRecursive(A22, SubMatricesInPlace(B21, B11));
 
             // we can save it to A since it is not relevant anymore (memory saving)
             // in place operations used (memory saving)
