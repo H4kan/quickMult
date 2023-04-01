@@ -60,7 +60,7 @@ static string GetFileName(bool fileShouldExist = false)
     Console.Write("Enter the file name: ");
     var fileName = Console.ReadLine();
 
-    while (string.IsNullOrEmpty(fileName)
+    while (String.IsNullOrEmpty(fileName)
         || fileName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0
         || (fileShouldExist && !File.Exists(Helpers.GetPathForFile(fileName))))
     {
@@ -76,7 +76,7 @@ static int GetNumberOfPlayers()
 {
     int n;
     Console.Write("Enter the number of players: ");
-    while (!int.TryParse(Console.ReadLine(), out n))
+    while (!Int32.TryParse(Console.ReadLine(), out n))
     {
         Console.WriteLine("Invalid input. Please enter an integer value.");
         Console.WriteLine("Enter the number of players: ");

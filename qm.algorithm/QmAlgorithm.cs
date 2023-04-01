@@ -1,23 +1,29 @@
-﻿namespace qm.algorithm
+﻿using System.Numerics;
+
+namespace qm.algorithm
 {
-    public class QmAlgorithm
+    public class QmAlgorithm<T> where T : IBitwiseOperators<T, T, T>, INumber<T>, IConvertible
     {
-        private readonly byte[][] edges;
+        private readonly T[][] edges;
 
         private readonly int playerNum;
 
-        public QmAlgorithm(int playerNum, byte[][] edges)
+        private IMatrixMultiplication<T> multiplication;
+
+        private static T zeroTyped = (T) Convert.ChangeType(0, typeof(T));
+        private static T oneTyped = (T)Convert.ChangeType(1, typeof(T));
+
+        public QmAlgorithm(int playerNum, byte[][] edges, IMatrixMultiplication<T> matrixMultiplication)
         {
-            this.edges = edges;
+            this.edges = edges.Select(l => l.Select(e => (T)Convert.ChangeType(e, typeof(T))).ToArray()).ToArray();
             this.playerNum = playerNum;
+            this.multiplication = matrixMultiplication;
         }
 
         public List<int> ConductAlgorithm()
         {
 
-            IMatrixMultiplication matrixMultiplication = new NaiveMultiplication();
-
-            var resultHandlingMatrix = matrixMultiplication.ConductSquareMultiplication(this.edges);
+            var resultHandlingMatrix = this.multiplication.ConductSquareMultiplication(this.edges);
 
             for (int i = 0; i < playerNum; i++)
             {
@@ -25,7 +31,7 @@
                 {
                     if (i == j)
                     {
-                        resultHandlingMatrix[i][j] = 1;
+                        resultHandlingMatrix[i][j] = oneTyped;
                     }
                     else
                     {
@@ -41,7 +47,7 @@
                 haveXProp = true;
                 for (int j = 0; j < playerNum; j++)
                 {
-                    if (resultHandlingMatrix[i][j] == 0)
+                    if (resultHandlingMatrix[i][j] == zeroTyped)
                     {
                         haveXProp = false;
                         break;

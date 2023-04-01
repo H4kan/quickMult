@@ -14,7 +14,7 @@ namespace qm.reader
             try
             {
                 int n = int.Parse(reader.ReadLine()!);
-                var matrix = Helpers.InitializeMatrix(n);
+                var matrix = Helpers.InitializeMatrix<byte>(n);
 
                 for (int i = 0; i < n; i++)
                 {

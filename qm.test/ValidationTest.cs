@@ -7,27 +7,51 @@ namespace qm.test
     [TestClass]
     public class ValidationTest
     {
-        [TestMethod]
-        public void TestRandomMatrix()
+        [DataTestMethod]
+        [DynamicData(nameof(GetMatrixSizes), DynamicDataSourceType.Method)]
+        public void TestRandomMatrix(int matrixSize)
         {
-            var matrix = MatrixGenerator.GenerateRandomResultMatrix(1000, 0);
-
-            var naiveSolution = new NaiveAlgorithm(1000, matrix).ConductAlgorithm();
-            var qmSolution = new QmAlgorithm(1000, matrix).ConductAlgorithm();
-
-            CollectionAssert.AreEqual(naiveSolution, qmSolution);
+            TestMatrix(matrixSize, (size) => MatrixGenerator.GenerateRandomResultMatrix(size, 0));
         }
 
-        [TestMethod]
-        public void TestLoserRandomMatrix()
+        [DataTestMethod]
+        [DynamicData(nameof(GetMatrixSizes), DynamicDataSourceType.Method)]
+        public void TestLoserRandomMatrix(int matrixSize)
         {
-            int n = 1000;
-            var matrix = MatrixGenerator.GenerateLoserResultMatrix(n, 0, 90);
+            TestMatrix(matrixSize, (size) => MatrixGenerator.GenerateLoserResultMatrix(size, 0, 70));
+        }
 
-            var naiveSolution = new NaiveAlgorithm(n, matrix).ConductAlgorithm();
-            var qmSolution = new QmAlgorithm(n, matrix).ConductAlgorithm();
+        public static IEnumerable<object[]> GetMatrixSizes()
+        {
+            return new List<object[]>
+            {
+                new object[] { 4 },
+                new object[] { 8 },
+                new object[] { 16 },
+                new object[] { 32 },
+                new object[] { 64 },
+                new object[] { 128 },
+                new object[] { 256 },
+                new object[] { 512 },
+                new object[] { 657 },
+                new object[] { 43 },
+                new object[] { 765 },
+                new object[] { 122 },
+            };
+        }
 
-            CollectionAssert.AreEqual(naiveSolution, qmSolution);
+        private static void TestMatrix(int matrixSize, Func<int, byte[][]> matrixGenerator)
+        {
+            var matrix = matrixGenerator(matrixSize);
+
+            var naiveSolution = new NaiveAlgorithm(matrixSize, matrix).ConductAlgorithm();
+            var naiveMultSolution = new QmAlgorithm<int>(matrixSize, matrix, new NaiveMultiplication<int>()).ConductAlgorithm();
+            var strassenSolution = new QmAlgorithm<int>(matrixSize, matrix, new StrassenMultiplication<int>(4)).ConductAlgorithm();
+            var hybridSolutioon = new QmAlgorithm<int>(matrixSize, matrix, new HybridMultiplication<int>()).ConductAlgorithm();
+
+            CollectionAssert.AreEqual(naiveSolution, naiveMultSolution);
+            CollectionAssert.AreEqual(naiveSolution, strassenSolution);
+            CollectionAssert.AreEqual(naiveSolution, hybridSolutioon);
         }
     }
 }
