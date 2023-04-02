@@ -1,5 +1,5 @@
-﻿using System.Numerics;
-using qm.utils;
+﻿using qm.utils;
+using System.Numerics;
 
 namespace qm.algorithm
 {
@@ -38,10 +38,7 @@ namespace qm.algorithm
             // calculate r(k)
             double r = Math.Cbrt((Math.Pow(7, k + 1) - 5 * Math.Pow(4, k)) / 2);
 
-
             return n > r;
         }
-
-        
     }
 }

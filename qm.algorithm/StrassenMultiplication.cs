@@ -23,7 +23,7 @@ namespace qm.algorithm
 
             // do actual multiplication
             operationalMatrix = StrassenRecursive(operationalMatrix, operationalMatrix);
-            
+
             // downsize
             var resultHandlingMatrix = Helpers.InitializeMatrix<T>(input.Length);
             Helpers.CopyMatrix<T>(resultHandlingMatrix, operationalMatrix);
@@ -60,7 +60,7 @@ namespace qm.algorithm
             // we can save it to A since it is not relevant anymore (memory saving)
             // in place operations used (memory saving)
             MergeIntoTarget(matrixA,
-                // P7 not used anymore
+                 // P7 not used anymore
                  SubMatricesInPlace(AddMatricesInPlace(AddMatricesInPlace(P7, P1), P4), P5),
                  // P5 not used anymore
                  AddMatricesInPlace(P5, P3),
@@ -76,10 +76,10 @@ namespace qm.algorithm
         {
             var halfSize = matrixA.Length / 2;
             var result = Helpers.InitializeMatrix<T>(halfSize);
-            
+
             int startX = firstX ? 0 : halfSize;
             int startY = firstY ? 0 : halfSize;
-          
+
 
             for (int i = 0; i < halfSize; i++)
             {

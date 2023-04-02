@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "qm.console-generate": {
+      "commandName": "Project",
+      "commandLineArgs": "generate -s 32 -f test32.txt"
+    },
+    "qm.console-run": {
+      "commandName": "Project",
+      "commandLineArgs": "run -f test32.txt"
+    },
+    "qm.console-compare": {
+      "commandName": "Project",
+      "commandLineArgs": "compare -f test32.txt"
+    }
+  }
+}

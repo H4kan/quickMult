@@ -2,7 +2,7 @@
 
 namespace qm.algorithm
 {
-    public class QmAlgorithm<T> where T : IBitwiseOperators<T, T, T>, INumber<T>, IConvertible
+    public class QmAlgorithm<T> : IQmAlgorithm where T : IBitwiseOperators<T, T, T>, INumber<T>, IConvertible
     {
         private readonly T[][] edges;
 
@@ -10,7 +10,7 @@ namespace qm.algorithm
 
         private IMatrixMultiplication<T> multiplication;
 
-        private static T zeroTyped = (T) Convert.ChangeType(0, typeof(T));
+        private static T zeroTyped = (T)Convert.ChangeType(0, typeof(T));
         private static T oneTyped = (T)Convert.ChangeType(1, typeof(T));
 
         public QmAlgorithm(int playerNum, byte[][] edges, IMatrixMultiplication<T> matrixMultiplication)
@@ -22,7 +22,6 @@ namespace qm.algorithm
 
         public List<int> ConductAlgorithm()
         {
-
             var resultHandlingMatrix = this.multiplication.ConductSquareMultiplication(this.edges);
 
             for (int i = 0; i < playerNum; i++)

@@ -3,9 +3,8 @@ using System.Numerics;
 
 namespace qm.algorithm
 {
-    public class NaiveMultiplication<T> : IMatrixMultiplication<T> where T: IBitwiseOperators<T, T, T>, INumber<T>
+    public class NaiveMultiplication<T> : IMatrixMultiplication<T> where T : IBitwiseOperators<T, T, T>, INumber<T>
     {
-
         public T[][] ConductSquareMultiplication(T[][] input)
         {
             var resultHandlingMatrix = Helpers.InitializeMatrix<T>(input.Length);
@@ -36,7 +35,7 @@ namespace qm.algorithm
                     }
                 }
             }
-            
+
             return resultHandlingMatrix;
         }
     }
