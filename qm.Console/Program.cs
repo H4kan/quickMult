@@ -1,94 +1,50 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using CommandLine;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using qm.console.Options;
 using qm.generator;
-using qm.naive;
 using qm.reader;
-using qm.utils;
+using qm.utils.Interfaces;
 
-Console.WriteLine("Hello, this is Ping-Pong problem solver!");
-PrintOptionInfo();
-ConsoleKeyInfo option;
+using IHost host = CreateHostBuilder(args).Build();
+using var scope = host.Services.CreateScope();
 
-do
+var services = scope.ServiceProvider;
+
+try
 {
-    Console.Write("Enter your choice (1-Solve, 2-Generate or 3-Exit): ");
-    option = Console.ReadKey();
-    Console.WriteLine();
-
-    if (option.KeyChar == '1')
-    {
-        var fileName = GetFileName(true);
-        var resultMatrix = QmReader.LoadFromFile(fileName);
-        while (resultMatrix == null)
-        {
-            Console.WriteLine($"The input data from the {fileName} has an invalid structure. Try again with diffrent file.");
-            fileName = GetFileName(false);
-            resultMatrix = QmReader.LoadFromFile(fileName);
-        }
-
-        var naiveAlg = new NaiveAlgorithm(resultMatrix.Length, resultMatrix);
-        var solution = naiveAlg.ConductAlgorithm();
-
-        var solutionFileName = Helpers.GetResultFileName(fileName);
-        QmWriter.SaveSolutionToFile(solution, solutionFileName);
-
-        Console.WriteLine($"Problem solved, the result is in the file {solutionFileName}");
-        Console.WriteLine(Helpers.FormatResult(solution));
-    }
-    else if (option.KeyChar == '2')
-    {
-        int n = GetNumberOfPlayers();
-        var fileName = GetFileName();
-
-        var myArray = MatrixGenerator.GenerateRandomResultMatrix(n, 100);
-        QmWriter.SaveMatrixToFile(myArray, fileName);
-
-        Console.WriteLine($"A test instance for {n} players was generated and saved in a file {fileName}");
-    }
-
-    Console.WriteLine("\n----------------------------------------------------------------\n");
-    PrintOptionInfo();
-} while (option.KeyChar != '3');
-
-Console.WriteLine("Bye!");
-Console.WriteLine("Press any key to exit.");
-Console.ReadKey();
-
-
-static string GetFileName(bool fileShouldExist = false)
+    var app = services.GetRequiredService<App>();
+    await Parser.Default.ParseArguments<RunOptions, CompareOptions, GenerateOptions>(args)
+        .MapResult(
+            (RunOptions options) => app.Run(options),
+            (CompareOptions options) => app.Compare(options),
+            (GenerateOptions options) => app.Generate(options),
+            err => Task.FromResult(-1)
+        );
+}
+catch (Exception e)
 {
-
-    Console.Write("Enter the file name: ");
-    var fileName = Console.ReadLine();
-
-    while (String.IsNullOrEmpty(fileName)
-        || fileName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0
-        || (fileShouldExist && !File.Exists(Helpers.GetPathForFile(fileName))))
-    {
-        Console.WriteLine("Invalid file name. Please enter an valid file name.");
-        Console.WriteLine("Enter the file name: ");
-        fileName = Console.ReadLine();
-    }
-
-    return fileName!;
+    await SomethingWenWrong();
 }
 
-static int GetNumberOfPlayers()
-{
-    int n;
-    Console.Write("Enter the number of players: ");
-    while (!Int32.TryParse(Console.ReadLine(), out n))
-    {
-        Console.WriteLine("Invalid input. Please enter an integer value.");
-        Console.WriteLine("Enter the number of players: ");
-    }
 
-    return n;
+static Task SomethingWenWrong()
+{
+    Console.WriteLine("Something went wrong, check the entered arguments and try again.");
+    return Task.FromResult(-1);
 }
 
-static void PrintOptionInfo()
+static IHostBuilder CreateHostBuilder(string[] args)
 {
-    Console.WriteLine("Please select an option:");
-    Console.WriteLine("1. Solve ping-pong problem");
-    Console.WriteLine("2. Generate test instance");
-    Console.WriteLine("3. Exit");
+    return Host.CreateDefaultBuilder(args)
+        .ConfigureServices((_, services) => ConfigureServices(services));
+}
+
+static void ConfigureServices(IServiceCollection services)
+{
+    services.AddSingleton<App>();
+    services.AddSingleton<IQmReader, QmReader>();
+    services.AddSingleton<IQmWriter, QmWriter>();
+
+    services.AddScoped<IMatrixGenerator, MatrixGenerator>();
 }

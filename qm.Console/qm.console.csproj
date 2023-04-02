@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.9.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\qm.algorithm\qm.algorithm.csproj" />
     <ProjectReference Include="..\qm.naive\qm.naive.csproj" />
     <ProjectReference Include="..\qm.generator\qm.generator.csproj" />

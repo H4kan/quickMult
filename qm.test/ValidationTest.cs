@@ -11,14 +11,16 @@ namespace qm.test
         [DynamicData(nameof(GetMatrixSizes), DynamicDataSourceType.Method)]
         public void TestRandomMatrix(int matrixSize)
         {
-            TestMatrix(matrixSize, (size) => MatrixGenerator.GenerateRandomResultMatrix(size, 0));
+            var generator = new MatrixGenerator(0);
+            TestMatrix(matrixSize, (size) => generator.GenerateRandomResultMatrix(size));
         }
 
         [DataTestMethod]
         [DynamicData(nameof(GetMatrixSizes), DynamicDataSourceType.Method)]
         public void TestLoserRandomMatrix(int matrixSize)
         {
-            TestMatrix(matrixSize, (size) => MatrixGenerator.GenerateLoserResultMatrix(size, 0, 70));
+            var generator = new MatrixGenerator(0);
+            TestMatrix(matrixSize, (size) => generator.GenerateLoserResultMatrix(size, 70));
         }
 
         public static IEnumerable<object[]> GetMatrixSizes()
