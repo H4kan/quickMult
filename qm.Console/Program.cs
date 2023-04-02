@@ -51,9 +51,9 @@ static void ConfigureServices(IServiceCollection services)
 
     services.AddSingleton<IMatrixGenerator, MatrixGenerator>();
 
-    services.AddSingleton(typeof(IMatrixMultiplication<>), typeof(NaiveMultiplication<>));
-    services.AddSingleton(typeof(IMatrixMultiplication<>), typeof(StrassenMultiplication<>));
-    services.AddSingleton(typeof(IMatrixMultiplication<>), typeof(HybridMultiplication<>));
+    services.AddSingleton(typeof(NaiveMultiplication<>));
+    services.AddSingleton(typeof(StrassenMultiplication<>));
+    services.AddSingleton(typeof(HybridMultiplication<>));
 
     services.AddSingleton(typeof(IQmAlgorithm<,>), typeof(QmAlgorithm<,>));
     services.AddSingleton(typeof(IQmAlgorithmFactory<>), typeof(QmAlgorithmFactory<>));

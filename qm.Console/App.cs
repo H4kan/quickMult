@@ -1,13 +1,10 @@
-﻿using qm.algorithm.MatrixMultiplication;
-using qm.algorithm;
+﻿using qm.algorithm.QmAlgorithmFactory;
 using qm.console.Options;
 using qm.generator;
-using qm.naive;
 using qm.utils;
 using qm.utils.Interfaces;
 using qm.utils.Models;
 using System.Diagnostics;
-using qm.algorithm.QmAlgorithmFactory;
 
 namespace qm.console
 {
@@ -39,14 +36,14 @@ namespace qm.console
             var solutionFileName = Helpers.GetResultFileName(options.InputFileName!);
             _qmWriter.SaveSolutionToFile(solution, solutionFileName);
 
-            Console.WriteLine($"Problem successfully solved and the result has been saved to the file {solutionFileName}.\n The calculated result is:");
+            Console.WriteLine($"Problem successfully solved and the result has been saved to the file {solutionFileName}.\nThe calculated result is:");
             Console.WriteLine(Helpers.FormatResult(solution));
             return Task.CompletedTask;
         }
 
         public Task Generate(GenerateOptions options)
         {
-            if (CheckIfFileNameIsValid(options.OutputFileName))
+            if (!CheckIfFileNameIsValid(options.OutputFileName))
             {
                 Console.WriteLine($"The provided filename {options.OutputFileName} is invalid. Check the file name and try again.");
                 return Task.FromResult(-1);
@@ -77,6 +74,8 @@ namespace qm.console
             var timeComparisionFileName = Helpers.GetTimeComparisionFileName(options.InputFileName!);
             _qmWriter.SaveTimeComparisionResultsToFile(timeComparision, timeComparisionFileName);
 
+            Console.WriteLine("\nComparison completed successfully. Results saved to: {0}", timeComparisionFileName);
+            DisplayTimeResults(timeComparision);
             return Task.CompletedTask;
         }
 
@@ -92,7 +91,7 @@ namespace qm.console
         {
             resultsMatrix = null;
 
-            if (CheckIfFileNameIsValid(fileName, true))
+            if (!CheckIfFileNameIsValid(fileName, true))
             {
                 Console.WriteLine("The provided filename is invalid. Please ensure the file exists and has a valid format. Check the file name and try again.");
                 return false;
@@ -118,6 +117,15 @@ namespace qm.console
             }
 
             return true;
+        }
+
+        private static void DisplayTimeResults(Dictionary<MatrixAlgorithm, TimeSpan> timeComparision)
+        {
+            Console.WriteLine("\nComparison results:");
+            foreach (var entry in timeComparision)
+            {
+                Console.WriteLine("{0}: {1}", entry.Key, entry.Value);
+            }
         }
     }
 }

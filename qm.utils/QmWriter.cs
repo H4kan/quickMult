@@ -17,11 +17,11 @@ namespace qm.reader
         public void SaveTimeComparisionResultsToFile(IDictionary<MatrixAlgorithm, TimeSpan> results, string fileName)
         {
             var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
-            var sb = new StringBuilder("Algorithm\tExecution Time");
+            var sb = new StringBuilder();
 
             foreach (var p in results)
             {
-                sb.AppendLine($"{p.Key}\t{p.Value}");
+                sb.AppendLine($"{p.Key} {p.Value}");
             }
 
             File.WriteAllText(filePath, sb.ToString());
