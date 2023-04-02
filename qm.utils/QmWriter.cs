@@ -1,5 +1,6 @@
-﻿using System.Text;
-using qm.utils.Interfaces;
+﻿using qm.utils.Interfaces;
+using qm.utils.Models;
+using System.Text;
 
 namespace qm.reader
 {
@@ -11,6 +12,19 @@ namespace qm.reader
             var filePath = Path.Combine(Environment.CurrentDirectory, fileName);
 
             File.WriteAllText(filePath, solutionAsString);
+        }
+
+        public void SaveTimeComparisionResultsToFile(IDictionary<MatrixAlgorithm, TimeSpan> results, string fileName)
+        {
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
+            var sb = new StringBuilder("Algorithm\tExecution Time");
+
+            foreach (var p in results)
+            {
+                sb.AppendLine($"{p.Key}\t{p.Value}");
+            }
+
+            File.WriteAllText(filePath, sb.ToString());
         }
 
         public void SaveMatrixToFile(byte[][] gameResultMatrix, string fileName)

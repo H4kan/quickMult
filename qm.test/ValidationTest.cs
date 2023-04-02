@@ -1,4 +1,5 @@
 using qm.algorithm;
+using qm.algorithm.MatrixMultiplication;
 using qm.generator;
 using qm.naive;
 
@@ -46,10 +47,14 @@ namespace qm.test
         {
             var matrix = matrixGenerator(matrixSize);
 
+            var naiveMultiplication = new NaiveMultiplication<int>();
+            var strassenMultiplication = new StrassenMultiplication<int>(naiveMultiplication);
+            var hybridMultiplication = new HybridMultiplication<int>(naiveMultiplication, strassenMultiplication);
+
             var naiveSolution = new NaiveAlgorithm(matrixSize, matrix).ConductAlgorithm();
-            var naiveMultSolution = new QmAlgorithm<int>(matrixSize, matrix, new NaiveMultiplication<int>()).ConductAlgorithm();
-            var strassenSolution = new QmAlgorithm<int>(matrixSize, matrix, new StrassenMultiplication<int>(4)).ConductAlgorithm();
-            var hybridSolutioon = new QmAlgorithm<int>(matrixSize, matrix, new HybridMultiplication<int>()).ConductAlgorithm();
+            var naiveMultSolution = new QmAlgorithm<int, NaiveMultiplication<int>>(naiveMultiplication).ConductAlgorithm(matrix);
+            var strassenSolution = new QmAlgorithm<int, StrassenMultiplication<int>>(strassenMultiplication).ConductAlgorithm(matrix);
+            var hybridSolutioon = new QmAlgorithm<int, HybridMultiplication<int>>(hybridMultiplication).ConductAlgorithm(matrix);
 
             CollectionAssert.AreEqual(naiveSolution, naiveMultSolution);
             CollectionAssert.AreEqual(naiveSolution, strassenSolution);

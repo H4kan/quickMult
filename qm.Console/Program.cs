@@ -1,6 +1,7 @@
 ﻿using CommandLine;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using qm.console;
 using qm.console.Options;
 using qm.generator;
 using qm.reader;
@@ -22,7 +23,7 @@ try
             err => Task.FromResult(-1)
         );
 }
-catch (Exception e)
+catch (Exception)
 {
     await SomethingWenWrong();
 }

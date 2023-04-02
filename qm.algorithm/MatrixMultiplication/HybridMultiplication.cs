@@ -1,32 +1,34 @@
 ﻿using qm.utils;
 using System.Numerics;
 
-namespace qm.algorithm
+namespace qm.algorithm.MatrixMultiplication
 {
     public class HybridMultiplication<T> : IMatrixMultiplication<T> where T : IBitwiseOperators<T, T, T>, INumber<T>
     {
-        private NaiveMultiplication<T> naiveMultiplication;
-        private StrassenMultiplication<T> StrassenMultiplication;
+        private NaiveMultiplication<T> _naiveMultiplication;
+        private StrassenMultiplication<T> _strassenMultiplication;
 
         public int SwitchToNaiveStep;
 
+
         // 512 is optimal value
-        public HybridMultiplication(int switchToNaiveStep = 512)
+        public HybridMultiplication(NaiveMultiplication<T> naiveMultiplication,
+            StrassenMultiplication<T> strassenMultiplication, int switchToNaiveStep = 512)
         {
-            this.SwitchToNaiveStep = switchToNaiveStep;
-            this.naiveMultiplication = new NaiveMultiplication<T>();
-            this.StrassenMultiplication = new StrassenMultiplication<T>(switchToNaiveStep);
+            SwitchToNaiveStep = switchToNaiveStep;
+            _naiveMultiplication = naiveMultiplication;
+            _strassenMultiplication = strassenMultiplication;
         }
 
         public T[][] ConductSquareMultiplication(T[][] input)
         {
             if (IsStrassenFaster(input.Length))
             {
-                return this.StrassenMultiplication.ConductSquareMultiplication(input);
+                return _strassenMultiplication.ConductSquareMultiplication(input);
             }
             else
             {
-                return this.naiveMultiplication.ConductSquareMultiplication(input);
+                return _naiveMultiplication.ConductSquareMultiplication(input);
             }
         }
 

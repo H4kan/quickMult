@@ -1,41 +1,42 @@
-﻿using System.Numerics;
-using qm.utils;
+﻿using qm.utils;
+using System.Numerics;
 
-namespace qm.algorithm
+namespace qm.algorithm.MatrixMultiplication
 {
     public class StrassenMultiplication<T> : IMatrixMultiplication<T> where T : IBitwiseOperators<T, T, T>, INumber<T>
     {
-        private NaiveMultiplication<T> naiveMultiplication = new NaiveMultiplication<T>();
+        private NaiveMultiplication<T> _naiveMultiplication;
 
         public int SwitchToNaiveStep;
 
         // 512 is optimal value
-        public StrassenMultiplication(int switchToNaiveStep = 512)
+        public StrassenMultiplication(NaiveMultiplication<T> naiveMultiplication, int switchToNaiveStep = 512)
         {
-            this.SwitchToNaiveStep = switchToNaiveStep;
+            _naiveMultiplication = naiveMultiplication;
+            SwitchToNaiveStep = switchToNaiveStep;
         }
 
         public T[][] ConductSquareMultiplication(T[][] input)
         {
             // upsize to 2^n
             var operationalMatrix = Helpers.InitializeMatrix<T>(Helpers.CeilPower2(input.Length));
-            Helpers.CopyMatrix<T>(operationalMatrix, input);
+            Helpers.CopyMatrix(operationalMatrix, input);
 
             // do actual multiplication
             operationalMatrix = StrassenRecursive(operationalMatrix, operationalMatrix);
 
             // downsize
             var resultHandlingMatrix = Helpers.InitializeMatrix<T>(input.Length);
-            Helpers.CopyMatrix<T>(resultHandlingMatrix, operationalMatrix);
+            Helpers.CopyMatrix(resultHandlingMatrix, operationalMatrix);
 
             return resultHandlingMatrix;
         }
 
         private T[][] StrassenRecursive(T[][] matrixA, T[][] matrixB)
         {
-            if (matrixA.Length <= this.SwitchToNaiveStep)
+            if (matrixA.Length <= SwitchToNaiveStep)
             {
-                return this.naiveMultiplication.ConductMultiplication(matrixA, matrixB);
+                return _naiveMultiplication.ConductMultiplication(matrixA, matrixB);
             }
 
             var A11 = GetSubMatrixByIndex(matrixA, true, true);

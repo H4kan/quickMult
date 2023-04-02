@@ -1,28 +1,28 @@
-﻿using System.Numerics;
+﻿using qm.algorithm.MatrixMultiplication;
+using System.Numerics;
 
 namespace qm.algorithm
 {
-    public class QmAlgorithm<T> : IQmAlgorithm where T : IBitwiseOperators<T, T, T>, INumber<T>, IConvertible
+    public class QmAlgorithm<T, Algorithm> : IQmAlgorithm<T, Algorithm>
+        where T : IBitwiseOperators<T, T, T>, INumber<T>, IConvertible
+        where Algorithm : IMatrixMultiplication<T>
     {
-        private readonly T[][] edges;
+        private readonly Algorithm _multiplicationAlgorithm;
 
-        private readonly int playerNum;
+        private static readonly T zeroTyped = (T)Convert.ChangeType(0, typeof(T));
+        private static readonly T oneTyped = (T)Convert.ChangeType(1, typeof(T));
 
-        private IMatrixMultiplication<T> multiplication;
 
-        private static T zeroTyped = (T)Convert.ChangeType(0, typeof(T));
-        private static T oneTyped = (T)Convert.ChangeType(1, typeof(T));
-
-        public QmAlgorithm(int playerNum, byte[][] edges, IMatrixMultiplication<T> matrixMultiplication)
+        public QmAlgorithm(Algorithm matrixMultiplication)
         {
-            this.edges = edges.Select(l => l.Select(e => (T)Convert.ChangeType(e, typeof(T))).ToArray()).ToArray();
-            this.playerNum = playerNum;
-            this.multiplication = matrixMultiplication;
+            _multiplicationAlgorithm = matrixMultiplication;
         }
 
-        public List<int> ConductAlgorithm()
+        public List<int> ConductAlgorithm(byte[][] results)
         {
-            var resultHandlingMatrix = this.multiplication.ConductSquareMultiplication(this.edges);
+            var edges = results.Select(l => l.Select(e => (T)Convert.ChangeType(e, typeof(T))).ToArray()).ToArray();
+            int playerNum = edges.Length;
+            var resultHandlingMatrix = this._multiplicationAlgorithm.ConductSquareMultiplication(edges);
 
             for (int i = 0; i < playerNum; i++)
             {
@@ -34,7 +34,7 @@ namespace qm.algorithm
                     }
                     else
                     {
-                        resultHandlingMatrix[i][j] += this.edges[i][j];
+                        resultHandlingMatrix[i][j] += edges[i][j];
                     }
                 }
             }
