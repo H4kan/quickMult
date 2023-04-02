@@ -21,7 +21,7 @@ namespace qm.reader
 
             foreach (var p in results)
             {
-                sb.AppendLine($"{p.Key} {p.Value}");
+                sb.AppendLine($"{p.Key} {p.Value.TotalNanoseconds}");
             }
 
             File.WriteAllText(filePath, sb.ToString());

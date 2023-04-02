@@ -20,13 +20,13 @@ try
     var app = services.GetRequiredService<App>();
     await Parser.Default.ParseArguments<RunOptions, CompareOptions, GenerateOptions>(args)
         .MapResult(
-            (RunOptions options) => app.Run(options),
-            (CompareOptions options) => app.Compare(options),
-            (GenerateOptions options) => app.Generate(options),
+            async (RunOptions options) => await app.Run(options),
+            async (CompareOptions options) => await app.Compare(options),
+            async (GenerateOptions options) => await app.Generate(options),
             err => Task.FromResult(-1)
         );
 }
-catch (Exception)
+catch (Exception e)
 {
     await SomethingWenWrong();
 }

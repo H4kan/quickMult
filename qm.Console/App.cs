@@ -23,60 +23,76 @@ namespace qm.console
             _qmAlgorithmFactory = qmAlgorithmFactory;
         }
 
-        public Task Run(RunOptions options)
+        public async Task Run(RunOptions options)
         {
             if (!LoadAndValidateInputFile(options.InputFileName, out var resultMatrix))
             {
-                return Task.FromResult(-1);
+                return;
             }
 
-            var qmAlgorithm = _qmAlgorithmFactory.Create(options.Algorithm);
-            var solution = qmAlgorithm.ConductAlgorithm(resultMatrix!);
+            Console.Write("Solving problem... ");
+            var solution = await ExecuteWithProgressIndicator(
+                () => SolveProblemUsingAlgorithm(options.Algorithm, resultMatrix!));
 
             var solutionFileName = Helpers.GetResultFileName(options.InputFileName!);
             _qmWriter.SaveSolutionToFile(solution, solutionFileName);
 
-            Console.WriteLine($"Problem successfully solved and the result has been saved to the file {solutionFileName}.\nThe calculated result is:");
+            Console.WriteLine($"\nProblem successfully solved and the result has been saved to the file {solutionFileName}.\nThe calculated result is:");
             Console.WriteLine(Helpers.FormatResult(solution));
-            return Task.CompletedTask;
         }
 
-        public Task Generate(GenerateOptions options)
+        public async Task Generate(GenerateOptions options)
         {
             if (!CheckIfFileNameIsValid(options.OutputFileName))
             {
-                Console.WriteLine($"The provided filename {options.OutputFileName} is invalid. Check the file name and try again.");
-                return Task.FromResult(-1);
+                Console.WriteLine($"The provided filename {options.OutputFileName} is invalid. Check the file name and try again.\n");
+                return;
             }
 
-            var randomMatrix = _matrixGenerator.GenerateRandomResultMatrix(options.Size!.Value);
+            Console.Write("Generating random matrix... ");
+            var randomMatrix = await ExecuteWithProgressIndicator(
+                () => _matrixGenerator.GenerateRandomResultMatrix(options.Size!.Value));
             _qmWriter.SaveMatrixToFile(randomMatrix, options.OutputFileName!);
 
-            Console.WriteLine($"A test instance for {options.Size.Value} players was generated and saved in a file {options.OutputFileName}");
-            return Task.CompletedTask;
+            Console.WriteLine($"\nA test instance for {options.Size!.Value} players was generated and saved in a file {options.OutputFileName}\n");
         }
 
-        public Task Compare(CompareOptions options)
+        public async Task Compare(CompareOptions options)
         {
             if (!LoadAndValidateInputFile(options.InputFileName, out var resultMatrix))
             {
-                return Task.FromResult(-1);
+                return;
             }
 
-            var timeComparision = new Dictionary<MatrixAlgorithm, TimeSpan>();
-            foreach (MatrixAlgorithm algorithm in Enum.GetValues(typeof(MatrixAlgorithm)))
-            {
-                var qmAlgorithm = _qmAlgorithmFactory.Create(algorithm);
-                var elapsedTime = MeasureExecutionTime(() => qmAlgorithm.ConductAlgorithm(resultMatrix!));
-                timeComparision.Add(algorithm, elapsedTime);
-            }
+            Console.Write("Performing comparisons... ");
+            var timeComparision = await ExecuteWithProgressIndicator(
+                () => PerformComparison(resultMatrix!));
 
             var timeComparisionFileName = Helpers.GetTimeComparisionFileName(options.InputFileName!);
             _qmWriter.SaveTimeComparisionResultsToFile(timeComparision, timeComparisionFileName);
 
             Console.WriteLine("\nComparison completed successfully. Results saved to: {0}", timeComparisionFileName);
             DisplayTimeResults(timeComparision);
-            return Task.CompletedTask;
+        }
+
+        private List<int> SolveProblemUsingAlgorithm(MatrixAlgorithm algorithm, byte[][] resultMatrix)
+        {
+            var qmAlgorithm = _qmAlgorithmFactory.Create(algorithm);
+            return qmAlgorithm.ConductAlgorithm(resultMatrix);
+        }
+
+        private IDictionary<MatrixAlgorithm, TimeSpan> PerformComparison(byte[][] resultMatrix)
+        {
+            var timeComparision = new Dictionary<MatrixAlgorithm, TimeSpan>();
+
+            foreach (MatrixAlgorithm algorithm in Enum.GetValues(typeof(MatrixAlgorithm)))
+            {
+                var qmAlgorithm = _qmAlgorithmFactory.Create(algorithm);
+                var elapsedTime = MeasureExecutionTime(() => qmAlgorithm.ConductAlgorithm(resultMatrix));
+                timeComparision.Add(algorithm, elapsedTime);
+            }
+
+            return timeComparision;
         }
 
         private static TimeSpan MeasureExecutionTime(Action action)
@@ -119,13 +135,42 @@ namespace qm.console
             return true;
         }
 
-        private static void DisplayTimeResults(Dictionary<MatrixAlgorithm, TimeSpan> timeComparision)
+        private static void DisplayTimeResults(IDictionary<MatrixAlgorithm, TimeSpan> timeComparision)
         {
-            Console.WriteLine("\nComparison results:");
+            Console.WriteLine("Comparison results:");
             foreach (var entry in timeComparision)
             {
                 Console.WriteLine("{0}: {1}", entry.Key, entry.Value);
             }
+        }
+
+        private static async Task ShowProgressIndicator(CancellationToken cancellationToken)
+        {
+            var spinner = new[] { '|', '/', '-', '\\' };
+            int counter = 0;
+
+            try
+            {
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    Console.Write(spinner[counter++ % spinner.Length]);
+                    await Task.Delay(100, cancellationToken);
+                    Console.Write("\b");
+                }
+            }
+            catch (OperationCanceledException) { }
+        }
+
+        private static async Task<T> ExecuteWithProgressIndicator<T>(Func<T> taskToExecute)
+        {
+            using var cts = new CancellationTokenSource();
+            var progressTask = ShowProgressIndicator(cts.Token);
+            var result = await Task.Run(taskToExecute);
+
+            cts.Cancel();
+            await progressTask;
+
+            return result;
         }
     }
 }
