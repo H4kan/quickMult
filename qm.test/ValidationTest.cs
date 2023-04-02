@@ -1,5 +1,5 @@
-using qm.algorithm;
 using qm.algorithm.MatrixMultiplication;
+using qm.algorithm.QmAlgorithm;
 using qm.generator;
 using qm.naive;
 

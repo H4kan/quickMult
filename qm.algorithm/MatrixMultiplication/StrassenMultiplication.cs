@@ -5,7 +5,7 @@ namespace qm.algorithm.MatrixMultiplication
 {
     public class StrassenMultiplication<T> : IMatrixMultiplication<T> where T : IBitwiseOperators<T, T, T>, INumber<T>
     {
-        private NaiveMultiplication<T> _naiveMultiplication;
+        private readonly NaiveMultiplication<T> _naiveMultiplication;
 
         public int SwitchToNaiveStep;
 
@@ -39,41 +39,41 @@ namespace qm.algorithm.MatrixMultiplication
                 return _naiveMultiplication.ConductMultiplication(matrixA, matrixB);
             }
 
-            var A11 = GetSubMatrixByIndex(matrixA, true, true);
-            var A21 = GetSubMatrixByIndex(matrixA, false, true);
-            var A12 = GetSubMatrixByIndex(matrixA, true, false);
-            var A22 = GetSubMatrixByIndex(matrixA, false, false);
+            var A11 = StrassenMultiplication<T>.GetSubMatrixByIndex(matrixA, true, true);
+            var A21 = StrassenMultiplication<T>.GetSubMatrixByIndex(matrixA, false, true);
+            var A12 = StrassenMultiplication<T>.GetSubMatrixByIndex(matrixA, true, false);
+            var A22 = StrassenMultiplication<T>.GetSubMatrixByIndex(matrixA, false, false);
 
-            var B11 = GetSubMatrixByIndex(matrixB, true, true);
-            var B21 = GetSubMatrixByIndex(matrixB, false, true);
-            var B12 = GetSubMatrixByIndex(matrixB, true, false);
-            var B22 = GetSubMatrixByIndex(matrixB, false, false);
+            var B11 = StrassenMultiplication<T>.GetSubMatrixByIndex(matrixB, true, true);
+            var B21 = StrassenMultiplication<T>.GetSubMatrixByIndex(matrixB, false, true);
+            var B12 = StrassenMultiplication<T>.GetSubMatrixByIndex(matrixB, true, false);
+            var B22 = StrassenMultiplication<T>.GetSubMatrixByIndex(matrixB, false, false);
 
             // some memory savings
-            var P1 = StrassenRecursive(AddMatrices(A11, A22), AddMatrices(B11, B22));
-            var P2 = StrassenRecursive(AddMatrices(A21, A22), B11);
-            var P5 = StrassenRecursive(AddMatrices(A11, A12), B22);
-            var P6 = StrassenRecursive(SubMatricesInPlace(A21, A11), AddMatrices(B11, B12));
-            var P7 = StrassenRecursive(SubMatricesInPlace(A12, A22), AddMatrices(B21, B22));
-            var P3 = StrassenRecursive(A11, SubMatricesInPlace(B12, B22));
-            var P4 = StrassenRecursive(A22, SubMatricesInPlace(B21, B11));
+            var P1 = StrassenRecursive(StrassenMultiplication<T>.AddMatrices(A11, A22), StrassenMultiplication<T>.AddMatrices(B11, B22));
+            var P2 = StrassenRecursive(StrassenMultiplication<T>.AddMatrices(A21, A22), B11);
+            var P5 = StrassenRecursive(StrassenMultiplication<T>.AddMatrices(A11, A12), B22);
+            var P6 = StrassenRecursive(StrassenMultiplication<T>.SubMatricesInPlace(A21, A11), StrassenMultiplication<T>.AddMatrices(B11, B12));
+            var P7 = StrassenRecursive(StrassenMultiplication<T>.SubMatricesInPlace(A12, A22), StrassenMultiplication<T>.AddMatrices(B21, B22));
+            var P3 = StrassenRecursive(A11, StrassenMultiplication<T>.SubMatricesInPlace(B12, B22));
+            var P4 = StrassenRecursive(A22, StrassenMultiplication<T>.SubMatricesInPlace(B21, B11));
 
             // we can save it to A since it is not relevant anymore (memory saving)
             // in place operations used (memory saving)
-            MergeIntoTarget(matrixA,
+            StrassenMultiplication<T>.MergeIntoTarget(matrixA,
                  // P7 not used anymore
-                 SubMatricesInPlace(AddMatricesInPlace(AddMatricesInPlace(P7, P1), P4), P5),
+                 StrassenMultiplication<T>.SubMatricesInPlace(StrassenMultiplication<T>.AddMatricesInPlace(StrassenMultiplication<T>.AddMatricesInPlace(P7, P1), P4), P5),
                  // P5 not used anymore
-                 AddMatricesInPlace(P5, P3),
+                 StrassenMultiplication<T>.AddMatricesInPlace(P5, P3),
                  // P4 not used anymore
-                 AddMatricesInPlace(P4, P2),
-                 SubMatricesInPlace(AddMatricesInPlace(AddMatricesInPlace(P3, P6), P1), P2)
+                 StrassenMultiplication<T>.AddMatricesInPlace(P4, P2),
+                 StrassenMultiplication<T>.SubMatricesInPlace(StrassenMultiplication<T>.AddMatricesInPlace(StrassenMultiplication<T>.AddMatricesInPlace(P3, P6), P1), P2)
                  );
 
             return matrixA;
         }
 
-        private T[][] GetSubMatrixByIndex(T[][] matrixA, bool firstX, bool firstY)
+        private static T[][] GetSubMatrixByIndex(T[][] matrixA, bool firstX, bool firstY)
         {
             var halfSize = matrixA.Length / 2;
             var result = Helpers.InitializeMatrix<T>(halfSize);
@@ -92,27 +92,17 @@ namespace qm.algorithm.MatrixMultiplication
             return result;
         }
 
-        private T[][] AddMatrices(T[][] matrixA, T[][] matrixB)
+        private static T[][] AddMatrices(T[][] matrixA, T[][] matrixB)
         {
             var result = Helpers.InitializeMatrix<T>(matrixA.Length);
             Helpers.CopyMatrix(result, matrixA);
 
-            AddMatricesInPlace(result, matrixB);
+            StrassenMultiplication<T>.AddMatricesInPlace(result, matrixB);
 
             return result;
         }
 
-        private T[][] SubMatrices(T[][] matrixA, T[][] matrixB)
-        {
-            var result = Helpers.InitializeMatrix<T>(matrixA.Length);
-            Helpers.CopyMatrix(result, matrixA);
-
-            SubMatricesInPlace(result, matrixB);
-
-            return result;
-        }
-
-        private T[][] AddMatricesInPlace(T[][] matrixA, T[][] matrixB)
+        private static T[][] AddMatricesInPlace(T[][] matrixA, T[][] matrixB)
         {
             for (int i = 0; i < matrixA.Length; i++)
             {
@@ -124,7 +114,7 @@ namespace qm.algorithm.MatrixMultiplication
             return matrixA;
         }
 
-        private T[][] SubMatricesInPlace(T[][] matrixA, T[][] matrixB)
+        private static T[][] SubMatricesInPlace(T[][] matrixA, T[][] matrixB)
         {
             for (int i = 0; i < matrixA.Length; i++)
             {
@@ -137,7 +127,7 @@ namespace qm.algorithm.MatrixMultiplication
             return matrixA;
         }
 
-        private void MergeIntoTarget(T[][] target, T[][] A11, T[][] A12, T[][] A21, T[][] A22)
+        private static void MergeIntoTarget(T[][] target, T[][] A11, T[][] A12, T[][] A21, T[][] A22)
         {
             var offset = target.Length / 2;
             for (int i = 0; i < offset; i++)

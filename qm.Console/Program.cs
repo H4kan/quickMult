@@ -1,6 +1,9 @@
 ﻿using CommandLine;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using qm.algorithm.MatrixMultiplication;
+using qm.algorithm.QmAlgorithm;
+using qm.algorithm.QmAlgorithmFactory;
 using qm.console;
 using qm.console.Options;
 using qm.generator;
@@ -28,7 +31,6 @@ catch (Exception)
     await SomethingWenWrong();
 }
 
-
 static Task SomethingWenWrong()
 {
     Console.WriteLine("Something went wrong, check the entered arguments and try again.");
@@ -47,5 +49,12 @@ static void ConfigureServices(IServiceCollection services)
     services.AddSingleton<IQmReader, QmReader>();
     services.AddSingleton<IQmWriter, QmWriter>();
 
-    services.AddScoped<IMatrixGenerator, MatrixGenerator>();
+    services.AddSingleton<IMatrixGenerator, MatrixGenerator>();
+
+    services.AddSingleton(typeof(IMatrixMultiplication<>), typeof(NaiveMultiplication<>));
+    services.AddSingleton(typeof(IMatrixMultiplication<>), typeof(StrassenMultiplication<>));
+    services.AddSingleton(typeof(IMatrixMultiplication<>), typeof(HybridMultiplication<>));
+
+    services.AddSingleton(typeof(IQmAlgorithm<,>), typeof(QmAlgorithm<,>));
+    services.AddSingleton(typeof(IQmAlgorithmFactory<>), typeof(QmAlgorithmFactory<>));
 }

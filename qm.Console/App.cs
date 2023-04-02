@@ -1,9 +1,13 @@
-﻿using qm.console.Options;
+﻿using qm.algorithm.MatrixMultiplication;
+using qm.algorithm;
+using qm.console.Options;
 using qm.generator;
 using qm.naive;
 using qm.utils;
 using qm.utils.Interfaces;
 using qm.utils.Models;
+using System.Diagnostics;
+using qm.algorithm.QmAlgorithmFactory;
 
 namespace qm.console
 {
@@ -12,26 +16,25 @@ namespace qm.console
         private readonly IMatrixGenerator _matrixGenerator;
         private readonly IQmWriter _qmWriter;
         private readonly IQmReader _qmReader;
+        private readonly IQmAlgorithmFactory<int> _qmAlgorithmFactory;
 
-        public App(IMatrixGenerator matrixGenerator, IQmWriter qmWriter, IQmReader qmReader)
+        public App(IMatrixGenerator matrixGenerator, IQmWriter qmWriter, IQmReader qmReader, IQmAlgorithmFactory<int> qmAlgorithmFactory)
         {
             _matrixGenerator = matrixGenerator;
             _qmWriter = qmWriter;
             _qmReader = qmReader;
+            _qmAlgorithmFactory = qmAlgorithmFactory;
         }
 
         public Task Run(RunOptions options)
         {
-            if (CheckIfFileNameIsValid(options.InputFileName, true))
+            if (!LoadAndValidateInputFile(options.InputFileName, out var resultMatrix))
             {
-                Console.WriteLine("The provided filename is invalid. Please ensure the file exists and has a valid format. Check the file name and try again.");
                 return Task.FromResult(-1);
             }
 
-            var resultsMatrix = _qmReader.LoadFromFile(options.InputFileName!);
-
-            var naiveAlg = new NaiveAlgorithm(resultsMatrix!.Length, resultsMatrix);
-            var solution = naiveAlg.ConductAlgorithm();
+            var qmAlgorithm = _qmAlgorithmFactory.Create(options.Algorithm);
+            var solution = qmAlgorithm.ConductAlgorithm(resultMatrix!);
 
             var solutionFileName = Helpers.GetResultFileName(options.InputFileName!);
             _qmWriter.SaveSolutionToFile(solution, solutionFileName);
@@ -45,7 +48,7 @@ namespace qm.console
         {
             if (CheckIfFileNameIsValid(options.OutputFileName))
             {
-                Console.WriteLine("The provided filename is invalid. Check the file name and try again.");
+                Console.WriteLine($"The provided filename {options.OutputFileName} is invalid. Check the file name and try again.");
                 return Task.FromResult(-1);
             }
 
@@ -58,23 +61,54 @@ namespace qm.console
 
         public Task Compare(CompareOptions options)
         {
-            if (CheckIfFileNameIsValid(options.InputFileName, true))
+            if (!LoadAndValidateInputFile(options.InputFileName, out var resultMatrix))
             {
-                Console.WriteLine("The provided filename is invalid. Please ensure the file exists and has a valid format. Check the file name and try again.");
                 return Task.FromResult(-1);
             }
 
-            var resultsMatrix = _qmReader.LoadFromFile(options.InputFileName!);
-
             var timeComparision = new Dictionary<MatrixAlgorithm, TimeSpan>();
+            foreach (MatrixAlgorithm algorithm in Enum.GetValues(typeof(MatrixAlgorithm)))
+            {
+                var qmAlgorithm = _qmAlgorithmFactory.Create(algorithm);
+                var elapsedTime = MeasureExecutionTime(() => qmAlgorithm.ConductAlgorithm(resultMatrix!));
+                timeComparision.Add(algorithm, elapsedTime);
+            }
 
-
-            _qmWriter.SaveTimeComparisionResultsToFile(timeComparision, options.InputFileName!);
+            var timeComparisionFileName = Helpers.GetTimeComparisionFileName(options.InputFileName!);
+            _qmWriter.SaveTimeComparisionResultsToFile(timeComparision, timeComparisionFileName);
 
             return Task.CompletedTask;
         }
 
-        private bool CheckIfFileNameIsValid(string? fileName, bool fileShouldExist = false)
+        private static TimeSpan MeasureExecutionTime(Action action)
+        {
+            var stopwatch = Stopwatch.StartNew();
+            action();
+            stopwatch.Stop();
+            return stopwatch.Elapsed;
+        }
+
+        private bool LoadAndValidateInputFile(string? fileName, out byte[][]? resultsMatrix)
+        {
+            resultsMatrix = null;
+
+            if (CheckIfFileNameIsValid(fileName, true))
+            {
+                Console.WriteLine("The provided filename is invalid. Please ensure the file exists and has a valid format. Check the file name and try again.");
+                return false;
+            }
+
+            resultsMatrix = _qmReader.LoadFromFile(fileName!);
+            if (resultsMatrix == null)
+            {
+                Console.WriteLine($"The structure of the input file {fileName} is invalid. Please make sure the file follows the correct format and try again.");
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool CheckIfFileNameIsValid(string? fileName, bool fileShouldExist = false)
         {
             if (string.IsNullOrEmpty(fileName)
             || fileName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0

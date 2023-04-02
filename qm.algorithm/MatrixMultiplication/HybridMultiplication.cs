@@ -5,8 +5,8 @@ namespace qm.algorithm.MatrixMultiplication
 {
     public class HybridMultiplication<T> : IMatrixMultiplication<T> where T : IBitwiseOperators<T, T, T>, INumber<T>
     {
-        private NaiveMultiplication<T> _naiveMultiplication;
-        private StrassenMultiplication<T> _strassenMultiplication;
+        private readonly NaiveMultiplication<T> _naiveMultiplication;
+        private readonly StrassenMultiplication<T> _strassenMultiplication;
 
         public int SwitchToNaiveStep;
 
@@ -22,7 +22,7 @@ namespace qm.algorithm.MatrixMultiplication
 
         public T[][] ConductSquareMultiplication(T[][] input)
         {
-            if (IsStrassenFaster(input.Length))
+            if (HybridMultiplication<T>.IsStrassenFaster(input.Length))
             {
                 return _strassenMultiplication.ConductSquareMultiplication(input);
             }
@@ -32,7 +32,7 @@ namespace qm.algorithm.MatrixMultiplication
             }
         }
 
-        private bool IsStrassenFaster(int n)
+        private static bool IsStrassenFaster(int n)
         {
             // get k
             int k = Helpers.CeilLog2(n);

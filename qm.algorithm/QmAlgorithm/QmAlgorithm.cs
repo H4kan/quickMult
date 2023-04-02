@@ -1,7 +1,7 @@
 ﻿using qm.algorithm.MatrixMultiplication;
 using System.Numerics;
 
-namespace qm.algorithm
+namespace qm.algorithm.QmAlgorithm
 {
     public class QmAlgorithm<T, Algorithm> : IQmAlgorithm<T, Algorithm>
         where T : IBitwiseOperators<T, T, T>, INumber<T>, IConvertible
@@ -22,7 +22,7 @@ namespace qm.algorithm
         {
             var edges = results.Select(l => l.Select(e => (T)Convert.ChangeType(e, typeof(T))).ToArray()).ToArray();
             int playerNum = edges.Length;
-            var resultHandlingMatrix = this._multiplicationAlgorithm.ConductSquareMultiplication(edges);
+            var resultHandlingMatrix = _multiplicationAlgorithm.ConductSquareMultiplication(edges);
 
             for (int i = 0; i < playerNum; i++)
             {
