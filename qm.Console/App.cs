@@ -38,7 +38,7 @@ namespace qm.console
             _qmWriter.SaveSolutionToFile(solution, solutionFileName);
 
             Console.WriteLine($"\nProblem successfully solved and the result has been saved to the file {solutionFileName}.\nThe calculated result is:");
-            Console.WriteLine(Helpers.FormatResult(solution));
+            Console.WriteLine($"{Helpers.FormatResult(solution)}\n");
         }
 
         public async Task Generate(GenerateOptions options)
@@ -142,6 +142,7 @@ namespace qm.console
             {
                 Console.WriteLine("{0}: {1}", entry.Key, entry.Value);
             }
+            Console.WriteLine();
         }
 
         private static async Task ShowProgressIndicator(CancellationToken cancellationToken)
