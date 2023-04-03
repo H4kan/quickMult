@@ -1,10 +1,12 @@
-﻿using System.Text;
+﻿using qm.utils.Interfaces;
+using qm.utils.Models;
+using System.Text;
 
 namespace qm.reader
 {
-    public static class QmWriter
+    public class QmWriter : IQmWriter
     {
-        public static void SaveSolutionToFile(IEnumerable<int> solution, string fileName)
+        public void SaveSolutionToFile(IEnumerable<int> solution, string fileName)
         {
             var solutionAsString = string.Join(", ", solution);
             var filePath = Path.Combine(Environment.CurrentDirectory, fileName);
@@ -12,7 +14,20 @@ namespace qm.reader
             File.WriteAllText(filePath, solutionAsString);
         }
 
-        public static void SaveMatrixToFile(byte[][] gameResultMatrix, string fileName)
+        public void SaveTimeComparisionResultsToFile(IDictionary<MatrixAlgorithm, TimeSpan> results, string fileName)
+        {
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
+            var sb = new StringBuilder();
+
+            foreach (var p in results)
+            {
+                sb.AppendLine($"{p.Key} {p.Value.TotalNanoseconds}");
+            }
+
+            File.WriteAllText(filePath, sb.ToString());
+        }
+
+        public void SaveMatrixToFile(byte[][] gameResultMatrix, string fileName)
         {
             var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
             var sb = new StringBuilder(gameResultMatrix.Length.ToString() + '\n');

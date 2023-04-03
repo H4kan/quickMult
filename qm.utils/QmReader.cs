@@ -1,10 +1,11 @@
 ﻿using qm.utils;
+using qm.utils.Interfaces;
 
 namespace qm.reader
 {
-    public static class QmReader
+    public class QmReader : IQmReader
     {
-        public static byte[][]? LoadFromFile(string filename)
+        public byte[][]? LoadFromFile(string filename)
         {
             var filePath = Helpers.GetPathForFile(filename);
             if (!File.Exists(filePath))

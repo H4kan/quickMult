@@ -71,5 +71,10 @@ namespace qm.utils
 
             return (i == -1) ? 1 : i + 1;
         }
+
+        public static string GetTimeComparisionFileName(string problemFileName)
+        {
+            return $"{Path.GetFileNameWithoutExtension(problemFileName)}-time-result.txt";
+        }
     }
 }

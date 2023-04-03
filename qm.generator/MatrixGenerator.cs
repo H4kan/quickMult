@@ -2,18 +2,24 @@
 
 namespace qm.generator
 {
-    public class MatrixGenerator
+    public class MatrixGenerator : IMatrixGenerator
     {
-        public static byte[][] GenerateRandomResultMatrix(int n, int seed = 0)
+        private readonly Random _rand;
+
+        public MatrixGenerator(int? seed = null)
         {
-            var rand = new Random(seed);
+            _rand = seed == null ? new Random((int)DateTime.Now.Ticks) : new Random(seed.Value);
+        }
+
+        public byte[][] GenerateRandomResultMatrix(int n)
+        {
             var resultMatrix = Helpers.InitializeMatrix<byte>(n);
 
             for (int i = 0; i < n - 1; i++)
             {
                 for (int j = i + 1; j < n; j++)
                 {
-                    resultMatrix[i][j] = (byte)(rand.Next(2));
+                    resultMatrix[i][j] = (byte)(_rand.Next(2));
                     resultMatrix[j][i] = (byte)(1 - resultMatrix[i][j]);
                 }
             }
@@ -22,18 +28,17 @@ namespace qm.generator
         }
 
 
-        public static byte[][] GenerateLoserResultMatrix(int n, int seed = 0, float loserPerc = 80)
+        public byte[][] GenerateLoserResultMatrix(int n, float loserPerc = 80)
         {
-            var rand = new Random(seed);
             var resultMatrix = Helpers.InitializeMatrix<byte>(n);
 
             for (int i = 0; i < n - 1; i++)
             {
-                var isNormal = rand.Next(100) > loserPerc;
+                var isNormal = _rand.Next(100) > loserPerc;
 
                 for (int j = i + 1; j < n; j++)
                 {
-                    resultMatrix[i][j] = isNormal ? (byte)(rand.Next(2)) : (byte)0;
+                    resultMatrix[i][j] = isNormal ? (byte)(_rand.Next(2)) : (byte)0;
                     resultMatrix[j][i] = (byte)(1 - resultMatrix[i][j]);
                 }
             }
