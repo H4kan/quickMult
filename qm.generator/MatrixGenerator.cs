@@ -6,7 +6,7 @@ namespace qm.generator
     {
         private readonly Random _rand;
 
-        public static int PowerAmplificator = 4;
+        public static int PowerScale = 400;
 
         public MatrixGenerator(int? seed = null)
         {
@@ -48,15 +48,24 @@ namespace qm.generator
             return resultMatrix;
         }
 
-        // range is [0, 1000] - 0 is random
-        public byte[][] GeneratePowerMatrix(int n, int playerRange)
+        // ELO system based method
+        // greater power factor, closer game is to random
+        public byte[][] GeneratePowerMatrix(int n, int playerRange = 1000)
         {
-            // this is equivalent
-            if (playerRange == 0)
-            {
-                return GenerateRandomResultMatrix(n);
-            }
+            return GeneratePowerMatrix_Internal(n, playerRange);
+        }
 
+        // bigger n, more percentage of player has prop X
+        // this makes playerRange increase with n
+        public byte[][] GenerateAutoPowerMatrix(int n)
+        {
+            var playerRange = n * 1000 / 64;
+            return GeneratePowerMatrix_Internal(n, playerRange);
+        }
+
+
+        private byte[][] GeneratePowerMatrix_Internal(int n, int playerRange)
+        {
             int[] playerPower = new int[n];
             for (int i = 0; i < n; i++)
             {
@@ -69,12 +78,9 @@ namespace qm.generator
             {
                 for (int j = i + 1; j < n; j++)
                 {
-                    // i has prob power[i]^ampl/(power[i]^ampl + power[j]^ampl)
-                    // => 1 / (1 + (power[j]/power[i])^ampl)
-                    // logarithms for better precision
-                    var iWonBoundary = 1 / (1 + 
-                        Math.Pow(Math.E, 
-                        PowerAmplificator * (Math.Log(playerPower[j]) - Math.Log(playerPower[i]))));
+                    // this is how it is in elo system
+                    var iWonBoundary = 1 / (1 +
+                        Math.Pow(10, (double)(playerPower[i] - playerPower[j]) / PowerScale));
 
                     var decider = _rand.NextDouble();
 
