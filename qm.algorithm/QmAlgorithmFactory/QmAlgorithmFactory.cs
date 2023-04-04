@@ -15,7 +15,7 @@ namespace qm.algorithm.QmAlgorithmFactory
             _serviceProvider = serviceProvider;
         }
 
-        public IQmAlgorithm<T, IMatrixMultiplication<T>> Create(MatrixAlgorithm matrixAlgorithm)
+        public IQmAlgorithm<T> Create(MatrixAlgorithm matrixAlgorithm)
         {
             IMatrixMultiplication<T> multiplicationAlgorithm = matrixAlgorithm switch
             {
@@ -24,7 +24,7 @@ namespace qm.algorithm.QmAlgorithmFactory
                 MatrixAlgorithm.Hybrid => _serviceProvider.GetRequiredService<HybridMultiplication<T>>(),
                 _ => throw new ArgumentOutOfRangeException(nameof(matrixAlgorithm), matrixAlgorithm, "Invalid matrix algorithm."),
             };
-            return new QmAlgorithm<T, IMatrixMultiplication<T>>(multiplicationAlgorithm);
+            return new QmAlgorithm<T>(multiplicationAlgorithm);
         }
     }
 }

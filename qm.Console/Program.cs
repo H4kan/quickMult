@@ -26,7 +26,7 @@ try
             err => Task.FromResult(-1)
         );
 }
-catch (Exception e)
+catch (Exception)
 {
     await SomethingWenWrong();
 }
@@ -55,6 +55,6 @@ static void ConfigureServices(IServiceCollection services)
     services.AddSingleton(typeof(StrassenMultiplication<>));
     services.AddSingleton(typeof(HybridMultiplication<>));
 
-    services.AddSingleton(typeof(IQmAlgorithm<,>), typeof(QmAlgorithm<,>));
+    services.AddSingleton(typeof(IQmAlgorithm<>), typeof(QmAlgorithm<>));
     services.AddSingleton(typeof(IQmAlgorithmFactory<>), typeof(QmAlgorithmFactory<>));
 }

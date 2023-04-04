@@ -7,6 +7,6 @@ namespace qm.algorithm.QmAlgorithmFactory
 {
     public interface IQmAlgorithmFactory<T> where T : IBitwiseOperators<T, T, T>, INumber<T>, IConvertible
     {
-        IQmAlgorithm<T, IMatrixMultiplication<T>> Create(MatrixAlgorithm matrixAlgorithm);
+        IQmAlgorithm<T> Create(MatrixAlgorithm matrixAlgorithm);
     }
 }

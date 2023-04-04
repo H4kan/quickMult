@@ -3,17 +3,16 @@ using System.Numerics;
 
 namespace qm.algorithm.QmAlgorithm
 {
-    public class QmAlgorithm<T, Algorithm> : IQmAlgorithm<T, Algorithm>
+    public class QmAlgorithm<T> : IQmAlgorithm<T>
         where T : IBitwiseOperators<T, T, T>, INumber<T>, IConvertible
-        where Algorithm : IMatrixMultiplication<T>
     {
-        private readonly Algorithm _multiplicationAlgorithm;
+        private readonly IMatrixMultiplication<T> _multiplicationAlgorithm;
 
         private static readonly T zeroTyped = (T)Convert.ChangeType(0, typeof(T));
         private static readonly T oneTyped = (T)Convert.ChangeType(1, typeof(T));
 
 
-        public QmAlgorithm(Algorithm matrixMultiplication)
+        public QmAlgorithm(IMatrixMultiplication<T> matrixMultiplication)
         {
             _multiplicationAlgorithm = matrixMultiplication;
         }
