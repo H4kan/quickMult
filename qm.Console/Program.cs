@@ -18,11 +18,14 @@ var services = scope.ServiceProvider;
 try
 {
     var app = services.GetRequiredService<App>();
-    await Parser.Default.ParseArguments<RunOptions, CompareOptions, GenerateOptions>(args)
+    await Parser.Default
+        .ParseArguments<RunOptions, CompareOptions, GenerateRandomOptions, GeneratePowerOptions, GenerateLoserOptions>(args)
         .MapResult(
             async (RunOptions options) => await app.Run(options),
             async (CompareOptions options) => await app.Compare(options),
-            async (GenerateOptions options) => await app.Generate(options),
+            async (GenerateRandomOptions options) => await app.GenerateRandom(options),
+            async (GeneratePowerOptions options) => await app.GeneratePower(options),
+            async (GenerateLoserOptions options) => await app.GenerateLoser(options),
             err => Task.FromResult(-1)
         );
 }

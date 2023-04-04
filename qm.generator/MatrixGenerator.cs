@@ -72,8 +72,8 @@ namespace qm.generator
                     // i has prob power[i]^ampl/(power[i]^ampl + power[j]^ampl)
                     // => 1 / (1 + (power[j]/power[i])^ampl)
                     // logarithms for better precision
-                    var iWonBoundary = 1 / (1 + 
-                        Math.Pow(Math.E, 
+                    var iWonBoundary = 1 / (1 +
+                        Math.Pow(Math.E,
                         PowerAmplificator * (Math.Log(playerPower[j]) - Math.Log(playerPower[i]))));
 
                     var decider = _rand.NextDouble();
