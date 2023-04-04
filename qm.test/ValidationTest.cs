@@ -3,7 +3,7 @@ using qm.algorithm.QmAlgorithm;
 using qm.generator;
 using qm.naive;
 
-namespace qm.test
+namespace qm.testW
 {
     [TestClass]
     public class ValidationTest
@@ -22,6 +22,14 @@ namespace qm.test
         {
             var generator = new MatrixGenerator(0);
             TestMatrix(matrixSize, (size) => generator.GenerateLoserResultMatrix(size, 70));
+        }
+
+        [DataTestMethod]
+        [DynamicData(nameof(GetMatrixSizes), DynamicDataSourceType.Method)]
+        public void TestPowerMatrix(int matrixSize)
+        {
+            var generator = new MatrixGenerator(0);
+            TestMatrix(matrixSize, (size) => generator.GeneratePowerMatrix(size, 1000));
         }
 
         public static IEnumerable<object[]> GetMatrixSizes()
