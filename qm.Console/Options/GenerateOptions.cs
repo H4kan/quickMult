@@ -20,4 +20,9 @@ namespace qm.console.Options
     public class GenerateAutoPowerOptions : BaseGenerateOptions
     {
     }
+
+    [Verb("generate-domination", HelpText = "Generate a new test file containing the results of a random tournament with one random player who dominates and beats all other players.")]
+    public class GenerateDominationOptions : BaseGenerateOptions
+    {
+    }
 }

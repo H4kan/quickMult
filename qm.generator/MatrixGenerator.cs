@@ -90,5 +90,20 @@ namespace qm.generator
 
             return resultMatrix;
         }
+
+        public byte[][] GenerateDominationMatrix(int n)
+        {
+            var matrix = GenerateRandomResultMatrix(n);
+            var dominator = _rand.Next(0, n);
+
+            for (int i = 0; i < n; i++)
+            {
+                matrix[dominator][i] = 1;
+                matrix[i][dominator] = 0;
+            }
+            matrix[dominator][dominator] = 0;
+
+            return matrix;
+        }
     }
 }

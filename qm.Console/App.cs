@@ -56,6 +56,11 @@ namespace qm.console
             await GenerateMatrix(options, opts => _matrixGenerator.GenerateAutoPowerMatrix(opts.Size!.Value), "auto power");
         }
 
+        public async Task GenerateDominationMatrix(GenerateDominationOptions options)
+        {
+            await GenerateMatrix(options, opts => _matrixGenerator.GenerateDominationMatrix(opts.Size!.Value), "domination");
+        }
+
         public async Task Compare(CompareOptions options)
         {
             if (!LoadAndValidateInputFile(options.InputFileName, out var resultMatrix))
