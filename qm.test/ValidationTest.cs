@@ -29,7 +29,15 @@ namespace qm.testW
         public void TestPowerMatrix(int matrixSize)
         {
             var generator = new MatrixGenerator(0);
-            TestMatrix(matrixSize, (size) => generator.GeneratePowerMatrix(size, 1000));
+            TestMatrix(matrixSize, (size) => generator.GeneratePowerMatrix(size));
+        }
+
+        [DataTestMethod]
+        [DynamicData(nameof(GetMatrixSizes), DynamicDataSourceType.Method)]
+        public void TestAutoPowerMatrix(int matrixSize)
+        {
+            var generator = new MatrixGenerator(0);
+            TestMatrix(matrixSize, (size) => generator.GenerateAutoPowerMatrix(size));
         }
 
         public static IEnumerable<object[]> GetMatrixSizes()
