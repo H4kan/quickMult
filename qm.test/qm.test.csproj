@@ -22,4 +22,8 @@
     <ProjectReference Include="..\qm.utils\qm.utils.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="TimeComparision\" />
+  </ItemGroup>
+
 </Project>

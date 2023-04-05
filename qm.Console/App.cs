@@ -41,20 +41,24 @@ namespace qm.console
             Console.WriteLine($"{Helpers.FormatResult(solution)}\n");
         }
 
-        public async Task Generate(GenerateOptions options)
+        public async Task GenerateRandom(GenerateRandomOptions options)
         {
-            if (!CheckIfFileNameIsValid(options.OutputFileName))
-            {
-                Console.WriteLine($"The provided filename {options.OutputFileName} is invalid. Check the file name and try again.\n");
-                return;
-            }
+            await GenerateMatrix(options, opts => _matrixGenerator.GenerateRandomResultMatrix(opts.Size!.Value), "random");
+        }
 
-            Console.Write("Generating random matrix... ");
-            var randomMatrix = await ExecuteWithProgressIndicator(
-                () => _matrixGenerator.GenerateRandomResultMatrix(options.Size!.Value));
-            _qmWriter.SaveMatrixToFile(randomMatrix, options.OutputFileName!);
+        public async Task GeneratePower(GeneratePowerOptions options)
+        {
+            await GenerateMatrix(options, opts => _matrixGenerator.GeneratePowerMatrix(opts.Size!.Value, opts.Range), "power");
+        }
 
-            Console.WriteLine($"\nA test instance for {options.Size!.Value} players was generated and saved in a file {options.OutputFileName}\n");
+        public async Task GenerateAutoPowerMatrix(GenerateAutoPowerOptions options)
+        {
+            await GenerateMatrix(options, opts => _matrixGenerator.GenerateAutoPowerMatrix(opts.Size!.Value), "auto power");
+        }
+
+        public async Task GenerateDominationMatrix(GenerateDominationOptions options)
+        {
+            await GenerateMatrix(options, opts => _matrixGenerator.GenerateDominationMatrix(opts.Size!.Value), "domination");
         }
 
         public async Task Compare(CompareOptions options)
@@ -73,6 +77,22 @@ namespace qm.console
 
             Console.WriteLine("\nComparison completed successfully. Results saved to: {0}", timeComparisionFileName);
             DisplayTimeResults(timeComparision);
+        }
+
+        private async Task GenerateMatrix<T>(T options, Func<T, byte[][]> generateMatrixFunc, string generatorType) where T : BaseGenerateOptions
+        {
+            if (!CheckIfFileNameIsValid(options.OutputFileName))
+            {
+                Console.WriteLine($"The provided filename {options.OutputFileName} is invalid. Check the file name and try again.\n");
+                return;
+            }
+
+            Console.Write($"Generating {generatorType} matrix... ");
+            var randomMatrix = await ExecuteWithProgressIndicator(
+                    () => generateMatrixFunc(options));
+            _qmWriter.SaveMatrixToFile(randomMatrix, options.OutputFileName!);
+
+            Console.WriteLine($"\nA test instance for {options.Size!.Value} players was generated using {generatorType} matrix generator and saved in a file {options.OutputFileName}\n");
         }
 
         private List<int> SolveProblemUsingAlgorithm(MatrixAlgorithm algorithm, byte[][] resultMatrix)
