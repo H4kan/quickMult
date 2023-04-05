@@ -8,20 +8,16 @@ namespace qm.console.Options
     {
     }
 
-    [Verb("generate-power", HelpText = "Generate a test file of a tournament in which the results of matches are based on randomly assigned player powers (the player with the higher power is more likely to win).")]
+    [Verb("generate-power", HelpText = "Generate a test file using ELO ranking. Tournament results are based on the randomly allocated ELO points of each player (the player with the higher ELO is more likely to win).")]
     public class GeneratePowerOptions : BaseGenerateOptions
     {
-        [Option('r', "range", Default = 1000, Required = false, HelpText = "The range of power values assigned to players. " +
-            "In the tournament, each player is assigned a random power value within the range, and players with higher power have a greater chance of defeating those with lower power.")]
-        [Range(0, 1000, ErrorMessage = "Player range value must be greater than or equal to 0 and less or equal than 1000")]
+        [Option('r', "range", Default = 1000, Required = false, HelpText = "A range of power (ELO) points used. In a tournament, each player is assigned a random ELO value from this range (higher ELO is more likely to win).")]
+        [Range(0, int.MaxValue, ErrorMessage = "Player range value must be greater than or equal to 0")]
         public int Range { get; set; }
     }
 
-    [Verb("generate-loser", HelpText = "Generate a new test file containing the results of a tournament in which there is a percentage of specific players who lose much more than they win.")]
-    public class GenerateLoserOptions : BaseGenerateOptions
+    [Verb("generate-auto-power", HelpText = "Generate a test file using the ELO ranking (analogous to generate-power), using a player range that increases dynaminclly with number of players in tournament.")]
+    public class GenerateAutoPowerOptions : BaseGenerateOptions
     {
-        [Option('l', "losers", Default = 30, Required = false, HelpText = "The percentage of losers in the tournament.")]
-        [Range(0, 100, ErrorMessage = "Percentage of losers in the tournament must be greater than or equal to 0 and less or equal than 100.")]
-        public int PercentageOfLosers { get; set; }
     }
 }

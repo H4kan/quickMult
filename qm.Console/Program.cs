@@ -19,13 +19,13 @@ try
 {
     var app = services.GetRequiredService<App>();
     await Parser.Default
-        .ParseArguments<RunOptions, CompareOptions, GenerateRandomOptions, GeneratePowerOptions, GenerateLoserOptions>(args)
+        .ParseArguments<RunOptions, CompareOptions, GenerateRandomOptions, GeneratePowerOptions, GenerateAutoPowerOptions>(args)
         .MapResult(
             async (RunOptions options) => await app.Run(options),
             async (CompareOptions options) => await app.Compare(options),
             async (GenerateRandomOptions options) => await app.GenerateRandom(options),
             async (GeneratePowerOptions options) => await app.GeneratePower(options),
-            async (GenerateLoserOptions options) => await app.GenerateLoser(options),
+            async (GenerateAutoPowerOptions options) => await app.GenerateAutoPowerMatrix(options),
             err => Task.FromResult(-1)
         );
 }

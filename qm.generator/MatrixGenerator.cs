@@ -29,7 +29,6 @@ namespace qm.generator
             return resultMatrix;
         }
 
-
         public byte[][] GenerateLoserResultMatrix(int n, float loserPerc = 80)
         {
             var resultMatrix = Helpers.InitializeMatrix<byte>(n);

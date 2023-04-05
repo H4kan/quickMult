@@ -51,9 +51,9 @@ namespace qm.console
             await GenerateMatrix(options, opts => _matrixGenerator.GeneratePowerMatrix(opts.Size!.Value, opts.Range), "power");
         }
 
-        public async Task GenerateLoser(GenerateLoserOptions options)
+        public async Task GenerateAutoPowerMatrix(GenerateAutoPowerOptions options)
         {
-            await GenerateMatrix(options, opts => _matrixGenerator.GenerateLoserResultMatrix(opts.Size!.Value, opts.PercentageOfLosers), "loser");
+            await GenerateMatrix(options, opts => _matrixGenerator.GenerateAutoPowerMatrix(opts.Size!.Value), "auto power");
         }
 
         public async Task Compare(CompareOptions options)
