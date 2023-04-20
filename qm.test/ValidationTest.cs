@@ -67,7 +67,7 @@ namespace qm.testW
             var strassenMultiplication = new StrassenMultiplication<int>(naiveMultiplication);
             var hybridMultiplication = new HybridMultiplication<int>(naiveMultiplication, strassenMultiplication);
 
-            var naiveSolution = new NaiveAlgorithm(matrixSize, matrix).ConductAlgorithm();
+            var naiveSolution = new NaiveAlgorithm().ConductAlgorithm(matrix);
             var naiveMultSolution = new QmAlgorithm<int>(naiveMultiplication).ConductAlgorithm(matrix);
             var strassenSolution = new QmAlgorithm<int>(strassenMultiplication).ConductAlgorithm(matrix);
             var hybridSolutioon = new QmAlgorithm<int>(hybridMultiplication).ConductAlgorithm(matrix);

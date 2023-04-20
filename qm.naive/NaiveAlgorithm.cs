@@ -4,21 +4,11 @@ namespace qm.naive
 {
     public class NaiveAlgorithm
     {
-
-        private readonly byte[][] edges;
-
-        private readonly int playerNum;
-
-        public NaiveAlgorithm(int playerNum, byte[][] edges)
+        public List<int> ConductAlgorithm(byte[][] edges)
         {
-            this.edges = edges;
-            this.playerNum = playerNum;
-        }
-
-        public List<int> ConductAlgorithm()
-        {
-            var resultHandlingMatrix = Helpers.InitializeMatrix<byte>(this.playerNum);
-            Helpers.CopyMatrix(resultHandlingMatrix, this.edges);
+            int playerNum = edges.Length;
+            var resultHandlingMatrix = Helpers.InitializeMatrix<byte>(playerNum);
+            Helpers.CopyMatrix(resultHandlingMatrix, edges);
 
             // iterate for each player
             for (int i = 0; i < playerNum; i++)
@@ -67,7 +57,6 @@ namespace qm.naive
             }
 
             return result;
-
         }
     }
 }
