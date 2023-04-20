@@ -11,14 +11,13 @@ namespace qm.test.TimeComparision
     public class AlgorithmAverageTimeComparision
     {
         [TestMethod]
-        [Ignore]
         public void TestAverageTimeComparision()
         {
             int step = 5;
             var generator = new MatrixGenerator(1000);
             var algorithmComparisionResult = InitializeAlgorithmResultsDictionary();
             var algorithms = InitializeAlgorithmDictionary();
-            var playerNumberList = Enumerable.Range(5, 100).Select(x => x * step);
+            var playerNumberList = Enumerable.Range(1, 200).Select(x => x * step);
 
             foreach (var playerNumber in playerNumberList)
             {
