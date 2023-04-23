@@ -1,10 +1,8 @@
-﻿using static qm.test.TimeComparision.AlgorithmAverageTimeComparision;
-
-namespace qm.test.Helpers
+﻿namespace qm.test.Helpers
 {
     public class WriterHelper
     {
-        public static void UpdateFileContent(Dictionary<AlgorithmForTest, List<string>> content, string fileName)
+        public static void UpdateFileContent<T>(Dictionary<T, List<string>> content, string fileName) where T : Enum
         {
             var fullPath = Directory.GetCurrentDirectory();
             var projectPath = fullPath.Remove(fullPath.IndexOf("qm.test"));
