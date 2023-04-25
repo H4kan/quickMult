@@ -1,4 +1,4 @@
-Naive
+Naive Algorithm
 50 732700
 100 2164600
 150 9483100
