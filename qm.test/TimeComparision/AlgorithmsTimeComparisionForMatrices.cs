@@ -1,26 +1,28 @@
 ﻿using qm.algorithm.MatrixMultiplication;
 using qm.algorithm.QmAlgorithm;
 using qm.generator;
+using qm.naive;
 using qm.test.Helpers;
+using qm.test.Models;
 using System.Diagnostics;
 
 namespace qm.test.TimeComparision
 {
     [TestClass]
-    public class AlgorithmTimeComparisionOnMatrixPower
+    public class AlgorithmsTimeComparisionForMatrices
     {
         [TestMethod]
-        public void TestTimeComparision()
+        public void AutoPowerMatrixTimeComparision()
         {
             int step = 50;
             var generator = new MatrixGenerator(1000);
             var algorithmComparisionResult = InitializeAlgorithmResultsDictionary();
             var algorithms = InitializeAlgorithmDictionary();
-            var playerNumberList = Enumerable.Range(1, 200).Select(x => x * step);
+            var playerNumberList = Enumerable.Range(1, 60).Select(x => x * step);
 
             foreach (var playerNumber in playerNumberList)
             {
-                var matrix = GetGeneratedMatrix(playerNumber, generator);
+                var matrix = generator.GenerateAutoPowerMatrix(playerNumber);
 
                 foreach (AlgorithmForTest algorithm in Enum.GetValues(typeof(AlgorithmForTest)))
                 {
@@ -28,6 +30,28 @@ namespace qm.test.TimeComparision
                 }
 
                 WriterHelper.UpdateFileContent(algorithmComparisionResult, "algorithm-time-comparision-auto-power-matrix-results.txt");
+            }
+        }
+
+        [TestMethod]
+        public void DominationMatrixTimeComparision()
+        {
+            int step = 50;
+            var generator = new MatrixGenerator(1000);
+            var algorithmComparisionResult = InitializeAlgorithmResultsDictionary();
+            var algorithms = InitializeAlgorithmDictionary();
+            var playerNumberList = Enumerable.Range(1, 60).Select(x => x * step);
+
+            foreach (var playerNumber in playerNumberList)
+            {
+                var matrix = generator.GenerateDominationMatrix(playerNumber);
+
+                foreach (AlgorithmForTest algorithm in Enum.GetValues(typeof(AlgorithmForTest)))
+                {
+                    RunAlgorithm(matrix, algorithmComparisionResult[algorithm], playerNumber, algorithms[algorithm]);
+                }
+
+                WriterHelper.UpdateFileContent(algorithmComparisionResult, "algorithm-time-comparision-domination-matrix-results.txt");
             }
         }
 
@@ -42,24 +66,11 @@ namespace qm.test.TimeComparision
             list.Add($"{n} {timer.Elapsed.TotalNanoseconds}");
         }
 
-        private static byte[][] GetGeneratedMatrix(int n, MatrixGenerator generator)
-        {
-            return generator.GenerateAutoPowerMatrix(n);
-        }
-
-        public enum AlgorithmForTest
-        {
-            //Naive,
-            QmAlgorithmWithNaive,
-            QmAlgorithmWithHybrid,
-            QmAlgorithmWithStrassen,
-        }
-
         private static Dictionary<AlgorithmForTest, List<string>> InitializeAlgorithmResultsDictionary()
         {
             return new Dictionary<AlgorithmForTest, List<string>>
             {
-                //[AlgorithmForTest.Naive] = new List<string> { "Naive Algorithm" },
+                [AlgorithmForTest.Naive] = new List<string> { "Naive Algorithm" },
                 [AlgorithmForTest.QmAlgorithmWithNaive] = new List<string> { "QM Algorithm with Naive" },
                 [AlgorithmForTest.QmAlgorithmWithHybrid] = new List<string> { "QM Algorithm with Hybrid" },
                 [AlgorithmForTest.QmAlgorithmWithStrassen] = new List<string> { "QM Algorithm with Strassen" }
@@ -74,7 +85,7 @@ namespace qm.test.TimeComparision
 
             return new Dictionary<AlgorithmForTest, Func<byte[][], List<int>>>
             {
-                //[AlgorithmForTest.Naive] = new NaiveAlgorithm().ConductAlgorithm,
+                [AlgorithmForTest.Naive] = new NaiveAlgorithm().ConductAlgorithm,
                 [AlgorithmForTest.QmAlgorithmWithNaive] = new QmAlgorithm<int>(naiveMultiplication).ConductAlgorithm,
                 [AlgorithmForTest.QmAlgorithmWithHybrid] = new QmAlgorithm<int>(hybridMultiplication).ConductAlgorithm,
                 [AlgorithmForTest.QmAlgorithmWithStrassen] = new QmAlgorithm<int>(strassenMultiplication).ConductAlgorithm,

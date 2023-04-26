@@ -1,6 +1,7 @@
 ﻿using qm.generator;
 using qm.naive;
 using qm.test.Helpers;
+using qm.test.Models;
 using System.Diagnostics;
 
 namespace qm.test.TimeComparision
@@ -39,13 +40,6 @@ namespace qm.test.TimeComparision
             timer.Stop();
 
             list.Add($"{n} {timer.Elapsed.TotalNanoseconds}");
-        }
-
-        public enum MatricesForTest
-        {
-            AutoPowerMatrix,
-            RandomResultMatrix,
-            DominationMatrix
         }
 
         private static Dictionary<MatricesForTest, List<string>> InitializeMatricesResultsDictionary()

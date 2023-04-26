@@ -3,6 +3,7 @@ using qm.algorithm.QmAlgorithm;
 using qm.generator;
 using qm.naive;
 using qm.test.Helpers;
+using qm.test.Models;
 using System.Diagnostics;
 
 namespace qm.test.TimeComparision
@@ -17,7 +18,7 @@ namespace qm.test.TimeComparision
             var generator = new MatrixGenerator(1000);
             var algorithmComparisionResult = InitializeAlgorithmResultsDictionary();
             var algorithms = InitializeAlgorithmDictionary();
-            var playerNumberList = Enumerable.Range(1, 200).Select(x => x * step);
+            var playerNumberList = Enumerable.Range(1, 300).Select(x => x * step);
 
             foreach (var playerNumber in playerNumberList)
             {
@@ -61,14 +62,6 @@ namespace qm.test.TimeComparision
             };
 
             return matrices;
-        }
-
-        public enum AlgorithmForTest
-        {
-            Naive,
-            QmAlgorithmWithNaive,
-            QmAlgorithmWithHybrid,
-            QmAlgorithmWithStrassen,
         }
 
         private static Dictionary<AlgorithmForTest, List<string>> InitializeAlgorithmResultsDictionary()
