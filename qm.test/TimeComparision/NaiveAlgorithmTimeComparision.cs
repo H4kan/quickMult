@@ -16,7 +16,7 @@ namespace qm.test.TimeComparision
             var generator = new MatrixGenerator(1000);
             var matricesComparisionResult = InitializeMatricesResultsDictionary();
             var algorithm = new NaiveAlgorithm();
-            var playerNumberList = Enumerable.Range(1, 200).Select(x => x * step);
+            var playerNumberList = Enumerable.Range(1, 100).Select(x => x * step);
 
             foreach (var playerNumber in playerNumberList)
             {

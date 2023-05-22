@@ -53,12 +53,10 @@ namespace qm.test.TimeComparision
                 generator.GenerateRandomResultMatrix(n),
                 generator.GenerateDominationMatrix(n),
                 generator.GenerateAutoPowerMatrix(n),
-                generator.GeneratePowerMatrix(n),
 
                 generator.GenerateRandomResultMatrix(n),
                 generator.GenerateDominationMatrix(n),
                 generator.GenerateAutoPowerMatrix(n),
-                generator.GeneratePowerMatrix(n),
             };
 
             return matrices;
