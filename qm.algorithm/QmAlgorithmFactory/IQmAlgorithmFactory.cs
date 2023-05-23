@@ -1,5 +1,4 @@
-﻿using qm.algorithm.MatrixMultiplication;
-using qm.algorithm.QmAlgorithm;
+﻿using qm.algorithm.QmAlgorithm;
 using qm.utils.Models;
 using System.Numerics;
 

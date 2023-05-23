@@ -9,58 +9,62 @@ using System.Diagnostics;
 namespace qm.test.TimeComparision
 {
     [TestClass]
-    public class AlgorithmAverageTimeComparision
+    [Ignore]
+    public class AlgorithmsTimeComparisionForMatrices
     {
         [TestMethod]
-        [Ignore]
-        public void TestAverageTimeComparision()
+        public void AutoPowerMatrixTimeComparision()
         {
-            int step = 5;
+            int step = 50;
             var generator = new MatrixGenerator(1000);
             var algorithmComparisionResult = InitializeAlgorithmResultsDictionary();
             var algorithms = InitializeAlgorithmDictionary();
-            var playerNumberList = Enumerable.Range(1, 300).Select(x => x * step);
+            var playerNumberList = Enumerable.Range(1, 60).Select(x => x * step);
 
             foreach (var playerNumber in playerNumberList)
             {
-                var matrices = GetGeneratedMatrix(playerNumber, generator);
+                var matrix = generator.GenerateAutoPowerMatrix(playerNumber);
 
                 foreach (AlgorithmForTest algorithm in Enum.GetValues(typeof(AlgorithmForTest)))
                 {
-                    RunAlgorithm(matrices, algorithmComparisionResult[algorithm], playerNumber, algorithms[algorithm]);
+                    RunAlgorithm(matrix, algorithmComparisionResult[algorithm], playerNumber, algorithms[algorithm]);
                 }
 
-                WriterHelper.UpdateFileContent(algorithmComparisionResult, "algorithm-average-time-results.txt");
+                WriterHelper.UpdateFileContent(algorithmComparisionResult, "algorithm-time-comparision-auto-power-matrix-results.txt");
             }
         }
 
-        private static void RunAlgorithm(List<byte[][]> matrices, List<string> list, int n, Func<byte[][], List<int>> runAlgorithm)
+        [TestMethod]
+        public void DominationMatrixTimeComparision()
+        {
+            int step = 50;
+            var generator = new MatrixGenerator(1000);
+            var algorithmComparisionResult = InitializeAlgorithmResultsDictionary();
+            var algorithms = InitializeAlgorithmDictionary();
+            var playerNumberList = Enumerable.Range(1, 60).Select(x => x * step);
+
+            foreach (var playerNumber in playerNumberList)
+            {
+                var matrix = generator.GenerateDominationMatrix(playerNumber);
+
+                foreach (AlgorithmForTest algorithm in Enum.GetValues(typeof(AlgorithmForTest)))
+                {
+                    RunAlgorithm(matrix, algorithmComparisionResult[algorithm], playerNumber, algorithms[algorithm]);
+                }
+
+                WriterHelper.UpdateFileContent(algorithmComparisionResult, "algorithm-time-comparision-domination-matrix-results.txt");
+            }
+        }
+
+        private static void RunAlgorithm(byte[][] matrix, List<string> list, int n, Func<byte[][], List<int>> runAlgorithm)
         {
             var timer = new Stopwatch();
-            foreach (var matrix in matrices)
-            {
-                timer.Start();
-                runAlgorithm(matrix);
-                timer.Stop();
-            }
 
-            list.Add($"{n} {timer.Elapsed.TotalNanoseconds / matrices.Count}");
-        }
+            timer.Start();
+            runAlgorithm(matrix);
+            timer.Stop();
 
-        private static List<byte[][]> GetGeneratedMatrix(int n, MatrixGenerator generator)
-        {
-            var matrices = new List<byte[][]>()
-            {
-                generator.GenerateRandomResultMatrix(n),
-                generator.GenerateDominationMatrix(n),
-                generator.GenerateAutoPowerMatrix(n),
-
-                generator.GenerateRandomResultMatrix(n),
-                generator.GenerateDominationMatrix(n),
-                generator.GenerateAutoPowerMatrix(n),
-            };
-
-            return matrices;
+            list.Add($"{n} {timer.Elapsed.TotalNanoseconds}");
         }
 
         private static Dictionary<AlgorithmForTest, List<string>> InitializeAlgorithmResultsDictionary()

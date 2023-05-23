@@ -37,7 +37,6 @@ namespace qm.naive
             }
 
             var result = new List<int>();
-
             bool haveXProp;
             for (int i = 0; i < playerNum; i++)
             {
