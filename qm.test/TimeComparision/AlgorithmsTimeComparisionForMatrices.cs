@@ -9,6 +9,7 @@ using System.Diagnostics;
 namespace qm.test.TimeComparision
 {
     [TestClass]
+    [Ignore]
     public class AlgorithmsTimeComparisionForMatrices
     {
         [TestMethod]

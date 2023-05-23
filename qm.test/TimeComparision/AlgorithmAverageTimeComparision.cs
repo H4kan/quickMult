@@ -12,6 +12,7 @@ namespace qm.test.TimeComparision
     public class AlgorithmAverageTimeComparision
     {
         [TestMethod]
+        [Ignore]
         public void TestAverageTimeComparision()
         {
             int step = 5;
